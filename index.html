@@ -3,7 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Portfolio</title>
+  <title>Bilal EL AMIN — Full Stack Developer</title>
+  <meta name="description" content="Bilal EL AMIN — Full Stack Developer Student from Fès, Morocco. Building modern web and mobile apps with Java, Spring Boot, Kotlin, PHP and more. Open to internships." />
+  <meta property="og:title" content="Bilal EL AMIN — Full Stack Developer" />
+  <meta property="og:description" content="Full Stack Developer Student from Fès, Morocco. Java · Spring Boot · Kotlin · PHP · MySQL. Open to internships." />
+  <meta property="og:image" content="https://b-elamin.github.io/my-portfolio/photo.jpeg" />
+  <meta property="og:url" content="https://b-elamin.github.io/my-portfolio/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Bilal EL AMIN — Full Stack Developer" />
+  <meta name="twitter:description" content="Full Stack Developer Student from Fès, Morocco. Java · Spring Boot · Kotlin · PHP · MySQL." />
+  <meta name="twitter:image" content="https://b-elamin.github.io/my-portfolio/photo.jpeg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -1047,7 +1060,7 @@
     .tech-svg { width: 100%; height: auto;
       filter: drop-shadow(0 0 18px rgba(57,211,83,0.12)); }
 
-    #hero, #about, #projects, #github-stats, #contact {
+    #hero, #about, #journey, #projects, #github-stats, #contact {
       scroll-margin-top: 64px;
     }
 
@@ -1098,6 +1111,256 @@
       align-items: center;
       justify-content: center;
     }
+
+    /* ── Hamburger Menu ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+      z-index: 200;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .nav-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 15, 0.97);
+      z-index: 150;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+    .nav-overlay.open { display: flex; }
+    .nav-overlay a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: color 0.2s;
+    }
+    .nav-overlay a:hover { color: var(--accent); }
+    .nav-overlay-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.8rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* ── Journey / Timeline Section ── */
+    #journey {
+      padding: 5rem 2rem;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      scroll-margin-top: 64px;
+    }
+    .journey-inner {
+      max-width: 750px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .timeline {
+      position: relative;
+      margin-top: 3rem;
+      padding-left: 2rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), #39d353, var(--accent2));
+      border-radius: 2px;
+    }
+    .tl-item {
+      position: relative;
+      margin-bottom: 2.5rem;
+      padding-left: 1.75rem;
+    }
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -0.45rem;
+      top: 0.35rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--surface);
+      box-shadow: 0 0 8px rgba(124, 92, 252, 0.5);
+    }
+    .tl-date {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #39d353;
+      margin-bottom: 0.3rem;
+    }
+    .tl-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+    .tl-place {
+      font-size: 0.85rem;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .tl-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── Contact Form ── */
+    .contact-form {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      text-align: left;
+    }
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      padding: 0.75rem 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus { border-color: var(--accent); }
+    .contact-form textarea { min-height: 110px; }
+    .form-status {
+      font-size: 0.88rem;
+      text-align: center;
+      min-height: 1.2rem;
+    }
+    .form-status.success { color: #39d353; }
+    .form-status.error   { color: #fc5c9c; }
+
+    /* ── Theme Accent Switcher ── */
+    #theme-switcher {
+      position: fixed;
+      bottom: 1.75rem;
+      right: 1.75rem;
+      z-index: 9000;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+    }
+    #theme-toggle-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.15);
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: border-color 0.2s;
+    }
+    #theme-toggle-btn:hover { border-color: var(--accent); }
+    .theme-palette {
+      display: none;
+      flex-direction: column;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .theme-palette.open { display: flex; }
+    .theme-swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.15);
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .theme-swatch:hover { transform: scale(1.2); border-color: #fff; }
+    .theme-swatch.active { border-color: #fff; transform: scale(1.15); }
+
+    /* ── Project card links ── */
+    .card-links {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .card-link-btn {
+      font-size: 0.75rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(124, 92, 252, 0.4);
+      color: var(--accent);
+      background: rgba(124, 92, 252, 0.08);
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.2s, border-color 0.2s;
+      letter-spacing: 0.2px;
+    }
+    .card-link-btn:hover {
+      background: rgba(124, 92, 252, 0.2);
+      border-color: var(--accent);
+    }
+
+    /* ── Reduced Motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .hero-photo-ring,
+      .hero-photo-ring.ring2 { animation: none; }
+      .scroll-hint { animation: none; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+      #cursor-canvas,
+      #gravity-canvas,
+      #matrix-canvas,
+      #tunnel-canvas { display: none; }
+    }
   </style>
 </head>
 <body class="loading">
@@ -1133,10 +1396,23 @@
     </span>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
+      <li><a href="#journey">Journey</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#github-stats">GitHub</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <!-- Mobile nav overlay -->
+    <div class="nav-overlay" id="nav-overlay">
+      <button class="nav-overlay-close" id="nav-close-btn" aria-label="Close menu">×</button>
+      <a href="#about">About</a>
+      <a href="#journey">Journey</a>
+      <a href="#projects">Projects</a>
+      <a href="#github-stats">GitHub</a>
+      <a href="#contact">Contact</a>
+    </div>
   </nav>
 
   <!-- Hero -->
@@ -1174,7 +1450,7 @@
       <div class="hero-photo-frame">
         <div class="hero-photo-ring"></div>
         <div class="hero-photo-ring ring2"></div>
-        <img src="photo.jpeg" alt="Bilal EL AMIN" class="hero-photo-img">
+        <img src="photo.jpeg" alt="Bilal EL AMIN" class="hero-photo-img" loading="lazy" decoding="async">
         <div class="hero-photo-glow"></div>
       </div>
       <div class="hero-tag">✦ Available for work</div>
@@ -1192,6 +1468,7 @@
         <a href="#projects" class="btn btn-primary">view projects</a>
         <a href="#contact" class="btn btn-outline">get in touch</a>
         <a href="https://github.com/belamiin" class="btn btn-outline" target="_blank" rel="noopener">github ↗</a>
+        <a href="bilal-elamin-cv.pdf" download class="btn btn-outline">download cv ↓</a>
       </div>
     </div>
 
@@ -1290,6 +1567,40 @@
     </div>
   </section>
 
+  <!-- Journey / Timeline -->
+  <section id="journey">
+    <div class="journey-inner">
+      <p class="section-label reveal">Journey</p>
+      <h2 class="section-title reveal">Timeline</h2>
+      <div class="timeline">
+        <div class="tl-item reveal">
+          <div class="tl-date">2024 – 2026</div>
+          <div class="tl-title">BTS Développement des Applications Informatiques (DAI)</div>
+          <div class="tl-place">Lycée Technique, Fès, Morocco</div>
+          <div class="tl-desc">2-year advanced technician program covering full-stack development, databases, mobile applications, and software engineering fundamentals.</div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-date">2024</div>
+          <div class="tl-title">SmartTrip — AI Tourism Platform</div>
+          <div class="tl-place">Team Project (3 members)</div>
+          <div class="tl-desc">Led backend development with Java &amp; Spring Boot. Integrated an AI recommendation engine for tourist routes in the Fès-Meknès region with JWT-secured APIs.</div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-date">2024</div>
+          <div class="tl-title">Parc Manager — IT Asset Tracking</div>
+          <div class="tl-place">Individual Project</div>
+          <div class="tl-desc">Built a C# WinForms desktop app to manage hardware inventory across departments, featuring QR label generation and automated reporting.</div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-date">2023</div>
+          <div class="tl-title">Student CRUD Dashboard</div>
+          <div class="tl-place">Individual Project</div>
+          <div class="tl-desc">Developed a PHP/MySQL multi-role web application for managing student records with search, PDF export, and a Bootstrap 5 UI.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Projects -->
   <section id="projects">
     <div class="projects-inner">
@@ -1319,6 +1630,9 @@
                 <span class="project-tag">Kotlin</span>
                 <span class="project-tag">PostgreSQL</span>
                 <span class="project-tag">AI</span>
+              </div>
+              <div class="card-links">
+                <a href="https://github.com/belamiin" target="_blank" rel="noopener" class="card-link-btn">GitHub ↗</a>
               </div>
               <div class="card-stats">
                 <p class="stats-label">Highlights</p>
@@ -1352,6 +1666,9 @@
                 <span class="project-tag">WinForms</span>
                 <span class="project-tag">SQL Server</span>
               </div>
+              <div class="card-links">
+                <a href="https://github.com/belamiin" target="_blank" rel="noopener" class="card-link-btn">GitHub ↗</a>
+              </div>
               <div class="card-stats">
                 <p class="stats-label">Highlights</p>
                 <div class="stat-row"><span class="stat-name">Time saved</span><div class="stat-track"><div class="stat-fill" style="--pct:40%"></div></div></div>
@@ -1384,6 +1701,9 @@
                 <span class="project-tag">MySQL</span>
                 <span class="project-tag">Bootstrap 5</span>
               </div>
+              <div class="card-links">
+                <a href="https://github.com/belamiin" target="_blank" rel="noopener" class="card-link-btn">GitHub ↗</a>
+              </div>
               <div class="card-stats">
                 <p class="stats-label">Highlights</p>
                 <div class="stat-row"><span class="stat-name">Multi-role</span><div class="stat-track"><div class="stat-fill" style="--pct:100%"></div></div></div>
@@ -1407,12 +1727,12 @@
 
       <div class="stat-cards-grid">
         <div class="gh-stat-card reveal">
-          <div class="gh-stat-value">3+</div>
+          <div class="gh-stat-value" id="gh-repos">3+</div>
           <div class="gh-stat-label">Repositories</div>
         </div>
         <div class="gh-stat-card reveal">
-          <div class="gh-stat-value">183</div>
-          <div class="gh-stat-label">Profile Views</div>
+          <div class="gh-stat-value" id="gh-followers">0</div>
+          <div class="gh-stat-label">Followers</div>
         </div>
         <div class="gh-stat-card reveal">
           <div class="gh-stat-value">2026</div>
@@ -1462,6 +1782,10 @@
         <a href="https://github.com/belamiin" target="_blank" rel="noopener">github.com/belamiin</a>
       </div>
       <div class="contact-row">
+        <span class="ci-icon">💼</span>
+        <a href="https://linkedin.com/in/bilal-el-amin" target="_blank" rel="noopener">linkedin.com/in/bilal-el-amin</a>
+      </div>
+      <div class="contact-row">
         <span class="ci-icon">📍</span>
         <span>Fès, Morocco 🇲🇦</span>
       </div>
@@ -1474,13 +1798,33 @@
         <span class="status-dot">open to internships</span>
       </div>
     </div>
-    <a href="mailto:elaminbillal@gmail.com" class="btn btn-primary reveal">Say Hello ✉</a>
+
+    <form id="contact-form" class="contact-form reveal" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <input type="text" name="name" placeholder="Your name" required autocomplete="name" />
+      <input type="email" name="email" placeholder="Your email" required autocomplete="email" />
+      <textarea name="message" placeholder="Your message…" required></textarea>
+      <button type="submit" class="btn btn-primary">Send Message ✉</button>
+      <p id="form-status" class="form-status"></p>
+    </form>
+
+    <a href="mailto:elaminbillal@gmail.com" class="btn btn-outline reveal">Or say hello directly ✉</a>
   </section>
 
   <footer>
     <span>~/b.elamin · built with passion · Fès, Morocco 🇲🇦</span>
     <span>WE DO NOT STOP LEARNING</span>
   </footer>
+
+  <!-- Theme Accent Switcher -->
+  <div id="theme-switcher">
+    <div class="theme-palette" id="theme-palette">
+      <button class="theme-swatch active" data-accent="#7c5cfc" data-accent2="#fc5c9c" style="background:#7c5cfc" title="Purple"></button>
+      <button class="theme-swatch" data-accent="#00d4ff" data-accent2="#0099cc" style="background:#00d4ff" title="Cyan"></button>
+      <button class="theme-swatch" data-accent="#f59e0b" data-accent2="#ef4444" style="background:#f59e0b" title="Amber"></button>
+      <button class="theme-swatch" data-accent="#10b981" data-accent2="#059669" style="background:#10b981" title="Emerald"></button>
+    </div>
+    <button id="theme-toggle-btn" title="Change accent color">🎨</button>
+  </div>
 
   </div><!-- #main-content -->
 
@@ -2763,6 +3107,140 @@
         window.scrollTo({ top, behavior: 'smooth' });
       });
     });
+
+    /* ═══════════════════════════════════════════════════
+       HAMBURGER MENU
+    ═══════════════════════════════════════════════════ */
+    (function () {
+      const btn      = document.getElementById('hamburger-btn');
+      const overlay  = document.getElementById('nav-overlay');
+      const closeBtn = document.getElementById('nav-close-btn');
+      if (!btn || !overlay) return;
+
+      function openMenu()  {
+        btn.classList.add('open');
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeMenu() {
+        btn.classList.remove('open');
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      btn.addEventListener('click', openMenu);
+      closeBtn.addEventListener('click', closeMenu);
+      overlay.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+    })();
+
+    /* ═══════════════════════════════════════════════════
+       LIVE GITHUB STATS
+    ═══════════════════════════════════════════════════ */
+    (function () {
+      const repoEl     = document.getElementById('gh-repos');
+      const followEl   = document.getElementById('gh-followers');
+      if (!repoEl) return;
+      fetch('https://api.github.com/users/belamiin')
+        .then(r => r.json())
+        .then(data => {
+          if (typeof data.public_repos === 'number') repoEl.textContent    = data.public_repos + '+';
+          if (typeof data.followers    === 'number' && followEl) followEl.textContent = data.followers;
+        })
+        .catch(() => { /* silently fall back to hardcoded values */ });
+    })();
+
+    /* ═══════════════════════════════════════════════════
+       THEME ACCENT SWITCHER
+    ═══════════════════════════════════════════════════ */
+    (function () {
+      const toggleBtn = document.getElementById('theme-toggle-btn');
+      const palette   = document.getElementById('theme-palette');
+      const root      = document.documentElement;
+      if (!toggleBtn || !palette) return;
+
+      // Restore saved theme
+      const saved  = localStorage.getItem('portfolio-accent');
+      const saved2 = localStorage.getItem('portfolio-accent2');
+      if (saved) {
+        root.style.setProperty('--accent',  saved);
+        root.style.setProperty('--accent2', saved2 || saved);
+        palette.querySelectorAll('.theme-swatch').forEach(s => {
+          s.classList.toggle('active', s.dataset.accent === saved);
+        });
+      }
+
+      toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        palette.classList.toggle('open');
+      });
+
+      palette.querySelectorAll('.theme-swatch').forEach(swatch => {
+        swatch.addEventListener('click', () => {
+          const accent  = swatch.dataset.accent;
+          const accent2 = swatch.dataset.accent2 || accent;
+          root.style.setProperty('--accent',  accent);
+          root.style.setProperty('--accent2', accent2);
+          localStorage.setItem('portfolio-accent',  accent);
+          localStorage.setItem('portfolio-accent2', accent2);
+          palette.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
+          swatch.classList.add('active');
+          palette.classList.remove('open');
+        });
+      });
+
+      // Close palette on outside click
+      document.addEventListener('click', (e) => {
+        const switcher = document.getElementById('theme-switcher');
+        if (switcher && !switcher.contains(e.target)) palette.classList.remove('open');
+      });
+    })();
+
+    /* ═══════════════════════════════════════════════════
+       CONTACT FORM — Formspree
+    ═══════════════════════════════════════════════════ */
+    (function () {
+      const form   = document.getElementById('contact-form');
+      const status = document.getElementById('form-status');
+      if (!form || !status) return;
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        status.textContent = 'Sending…';
+        status.className   = 'form-status';
+        try {
+          const res = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'Accept': 'application/json' }
+          });
+          if (res.ok) {
+            status.textContent = '✓ Message sent! I\'ll get back to you soon.';
+            status.className   = 'form-status success';
+            form.reset();
+          } else {
+            throw new Error('Server error');
+          }
+        } catch {
+          status.textContent = '✗ Something went wrong. Please email me directly.';
+          status.className   = 'form-status error';
+        }
+      });
+    })();
+
+    /* ═══════════════════════════════════════════════════
+       PREFERS-REDUCED-MOTION — disable heavy canvas loops
+    ═══════════════════════════════════════════════════ */
+    (function () {
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      ['gravity-canvas', 'matrix-canvas', 'cursor-canvas', 'tunnel-canvas'].forEach(id => {
+        const c = document.getElementById(id);
+        if (c) c.style.display = 'none';
+      });
+      // Also hide custom cursor dot
+      const dot = document.getElementById('cursor-dot');
+      if (dot) dot.style.display = 'none';
+      document.body.style.cursor = '';
+    })();
   </script>
 </body>
 </html>
