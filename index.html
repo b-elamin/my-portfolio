@@ -123,43 +123,27 @@
       padding: 6rem 2rem 4rem;
     }
 
-    /* SVG Blob background */
-    .blob-container {
+    /* Zellige geometric background */
+    .zellige-bg {
       position: absolute;
       inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       z-index: 0;
       overflow: hidden;
+      pointer-events: none;
     }
 
-    .blob-svg {
-      width: min(700px, 90vw);
-      height: min(700px, 90vw);
-      opacity: 0.18;
-      filter: blur(2px);
-    }
-
-    .blob-path {
-      fill: url(#blob-gradient);
-    }
-
-    /* Second, smaller blob for depth */
-    .blob-svg-2 {
-      position: absolute;
-      width: min(400px, 60vw);
-      height: min(400px, 60vw);
-      opacity: 0.12;
-      filter: blur(4px);
-      transform: translate(25%, 20%);
+    .zellige-svg {
+      width: 100%;
+      height: 100%;
     }
 
     .hero-content {
       position: relative;
       z-index: 1;
-      text-align: center;
-      max-width: 800px;
+      text-align: left;
+      padding-left: 4rem;
+      padding-right: 2rem;
+      max-width: 100%;
     }
 
     .hero-tag {
@@ -177,14 +161,13 @@
     }
 
     .hero-title {
-      font-size: clamp(2.8rem, 7vw, 5.5rem);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -1.5px;
-      margin-bottom: 1.25rem;
+      font-size: clamp(3.5rem, 13vw, 11rem);
+      font-weight: 900;
+      line-height: 0.92;
+      letter-spacing: -4px;
+      margin-bottom: 1.5rem;
       position: relative;
       transition: filter 0.15s ease;
-      /* Holographic foil */
       --mx: 50%;
       --my: 50%;
       --hue: 200;
@@ -192,7 +175,8 @@
         conic-gradient(
           from calc(var(--hue) * 1deg) at var(--mx) var(--my),
           hsl(0   100% 72%), hsl(60  100% 72%), hsl(120 100% 72%),
-          hsl(180 100% 72%), hsl(240 100% 72%), hsl(300 100% 72%), hsl(360 100% 72%)
+          hsl(180 100% 72%), hsl(240 100% 72%), hsl(300 100% 72%), 
+          hsl(360 100% 72%)
         ),
         linear-gradient(
           calc(var(--hue) * 1deg),
@@ -204,9 +188,18 @@
       background-clip: text;
       color: transparent;
       -webkit-text-fill-color: transparent;
-      text-shadow:
-        0 0 18px hsl(calc(var(--hue) + 180) 100% 65% / 0.38),
-        0 0 42px hsl(calc(var(--hue) + 180) 100% 55% / 0.18);
+      text-shadow: none;
+      word-break: break-word;
+      max-width: 100%;
+    }
+
+    .hero-title::after {
+      content: '';
+      display: block;
+      width: clamp(60px, 8vw, 120px);
+      height: 3px;
+      background: #39d353;
+      margin-top: 1.2rem;
     }
 
     .hero-title:hover {
@@ -308,7 +301,7 @@
     .hero-stats {
       display: flex;
       gap: 1rem;
-      justify-content: center;
+      justify-content: flex-start;
       flex-wrap: wrap;
       margin-bottom: 2.5rem;
     }
@@ -324,7 +317,7 @@
       display: inline-flex;
       gap: 1rem;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-start;
     }
 
     .btn {
@@ -888,53 +881,11 @@
       font-size: 0.85rem;
     }
 
-    /* ── Blob animation keyframes ── */
-    @keyframes blobMorph1 {
-      0%   { d: path("M440,280Q430,360,360,400Q290,440,210,410Q130,380,110,300Q90,220,140,160Q190,100,270,90Q350,80,410,140Q470,200,440,280Z"); }
-      25%  { d: path("M450,270Q450,360,375,415Q300,470,210,430Q120,390,100,300Q80,210,140,150Q200,90,295,85Q390,80,435,165Q480,250,450,270Z"); }
-      50%  { d: path("M420,265Q410,350,340,405Q270,460,185,425Q100,390,90,300Q80,210,145,150Q210,90,305,92Q400,94,430,180Q460,266,420,265Z"); }
-      75%  { d: path("M445,285Q440,375,365,420Q290,465,200,430Q110,395,100,305Q90,215,150,155Q210,95,300,88Q390,81,430,168Q470,255,445,285Z"); }
-      100% { d: path("M440,280Q430,360,360,400Q290,440,210,410Q130,380,110,300Q90,220,140,160Q190,100,270,90Q350,80,410,140Q470,200,440,280Z"); }
-    }
-
-    @keyframes blobMorph2 {
-      0%   { d: path("M380,250Q370,330,305,375Q240,420,165,385Q90,350,85,270Q80,190,135,140Q190,90,270,92Q350,94,375,170Q400,246,380,250Z"); }
-      33%  { d: path("M390,245Q385,335,315,385Q245,435,165,395Q85,355,82,270Q79,185,138,132Q197,79,280,84Q363,89,382,165Q401,241,390,245Z"); }
-      66%  { d: path("M375,255Q368,340,298,388Q228,436,152,400Q76,364,78,278Q80,192,138,140Q196,88,278,86Q360,84,374,168Q388,252,375,255Z"); }
-      100% { d: path("M380,250Q370,330,305,375Q240,420,165,385Q90,350,85,270Q80,190,135,140Q190,90,270,92Q350,94,375,170Q400,246,380,250Z"); }
-    }
-
-    @keyframes blobRotate {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-
-    @keyframes blobRotate2 {
-      from { transform: rotate(0deg) translate(25%, 20%); }
-      to   { transform: rotate(-360deg) translate(25%, 20%); }
-    }
-
     @keyframes avatarMorph {
       0%   { d: path("M130,100Q160,50,200,60Q240,70,260,100Q280,130,265,165Q250,200,215,215Q180,230,148,215Q116,200,105,165Q94,130,130,100Z"); }
       33%  { d: path("M125,95Q158,45,202,58Q246,71,265,105Q284,139,268,172Q252,205,214,218Q176,231,144,216Q112,201,103,165Q94,129,125,95Z"); }
       66%  { d: path("M132,102Q163,52,204,64Q245,76,263,108Q281,140,266,174Q251,208,213,219Q175,230,143,215Q111,200,104,164Q97,128,132,102Z"); }
       100% { d: path("M130,100Q160,50,200,60Q240,70,260,100Q280,130,265,165Q250,200,215,215Q180,230,148,215Q116,200,105,165Q94,130,130,100Z"); }
-    }
-
-    .blob-animate-1 {
-      animation: blobMorph1 12s ease-in-out infinite, blobRotate 30s linear infinite;
-      transform-origin: center;
-      transform-box: fill-box;
-    }
-
-    .blob-animate-2 {
-      animation: blobMorph2 9s ease-in-out infinite reverse;
-      transform-origin: center;
-      transform-box: fill-box;
-    }
-
-    .blob-svg-2 {
-      animation: blobRotate2 40s linear infinite reverse;
     }
 
     .avatar-morph {
@@ -1110,42 +1061,33 @@
 
   <!-- Hero -->
   <section id="hero">
-    <canvas id="tunnel-canvas"></canvas>
-    <!-- Animated SVG Blob Background -->
-    <div class="blob-container">
-      <svg class="blob-svg" viewBox="0 0 540 540" xmlns="http://www.w3.org/2000/svg">
+    <div class="zellige-bg" aria-hidden="true">
+      <svg class="zellige-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="blob-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#7c5cfc"/>
-            <stop offset="50%" stop-color="#b45cfc"/>
-            <stop offset="100%" stop-color="#fc5c9c"/>
-          </linearGradient>
-          <filter id="blob-glow">
-            <feGaussianBlur stdDeviation="8" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
+          <pattern id="zellige" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+            <!-- 8-pointed Islamic star tile -->
+            <polygon points="20,2 23.8,10.2 32.7,8 30.5,17 38.7,20.8 
+                      30.5,23 32.7,32 23.8,29.8 20,38 16.2,29.8 
+                      7.3,32 9.5,23 1.3,20.8 9.5,17 7.3,8 16.2,10.2" fill="none" stroke="rgba(57,211,83,0.12)" stroke-width="0.6"></polygon>
+            <!-- Inner diamond -->
+            <polygon points="20,10 26,20 20,30 14,20" fill="none" stroke="rgba(57,211,83,0.07)" stroke-width="0.5"></polygon>
+            <!-- Center dot -->
+            <circle cx="20" cy="20" r="1.2" fill="rgba(57,211,83,0.15)"></circle>
+          </pattern>
+          <!-- Radial fade mask: bright center, dark edges -->
+          <radialGradient id="zellige-fade" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stop-color="white" stop-opacity="1"></stop>
+            <stop offset="60%" stop-color="white" stop-opacity="0.4"></stop>
+            <stop offset="100%" stop-color="white" stop-opacity="0"></stop>
+          </radialGradient>
+          <mask id="zellige-mask">
+            <rect width="100%" height="100%" fill="url(#zellige-fade)"></rect>
+          </mask>
         </defs>
-        <path
-          class="blob-path blob-animate-1"
-          d="M440,280Q430,360,360,400Q290,440,210,410Q130,380,110,300Q90,220,140,160Q190,100,270,90Q350,80,410,140Q470,200,440,280Z"
-          filter="url(#blob-glow)"
-        />
-      </svg>
-
-      <svg class="blob-svg-2 blob-svg" viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="blob-gradient-2" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#5c9cfc"/>
-            <stop offset="100%" stop-color="#fc5c9c"/>
-          </linearGradient>
-        </defs>
-        <path
-          class="blob-path blob-animate-2"
-          fill="url(#blob-gradient-2)"
-          d="M380,250Q370,330,305,375Q240,420,165,385Q90,350,85,270Q80,190,135,140Q190,90,270,92Q350,94,375,170Q400,246,380,250Z"
-        />
+        <rect width="100%" height="100%" fill="url(#zellige)" mask="url(#zellige-mask)"></rect>
       </svg>
     </div>
+    <canvas id="tunnel-canvas"></canvas>
 
     <div class="hero-content">
       <div class="hero-photo-frame">
