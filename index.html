@@ -753,6 +753,23 @@
     body.loading #main-content {
       opacity: 0;
     }
+
+    /* ── Black Hole Overlay (scroll transitions) ── */
+    #bh-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      clip-path: circle(0% at 50% 50%);
+      pointer-events: none;
+      z-index: 8000;
+      will-change: clip-path;
+    }
+
+    /* Spiral-inward: applied via JS with staggered delays */
+    .bh-spiral-out {
+      transform: rotate(720deg) scale(0) !important;
+      opacity: 0 !important;
+    }
   </style>
 </head>
 <body class="loading">
@@ -773,6 +790,7 @@
   <canvas id="cursor-canvas"></canvas>
   <div id="cursor-dot"></div>
   <div id="vignette"></div>
+  <div id="bh-overlay" aria-hidden="true"></div>
 
   <div id="main-content">
 
@@ -1330,9 +1348,35 @@
           fw.draw();
         }
 
+        // Shockwave rings (triggered by scroll transitions)
+        for (let i = shockwaves.length - 1; i >= 0; i--) {
+          const sw  = shockwaves[i];
+          const age = now - sw.born;
+          const t   = age / sw.life;
+          if (t >= 1) { shockwaves.splice(i, 1); continue; }
+          const r = sw.maxR * t;
+          ctx.beginPath();
+          ctx.arc(sw.x, sw.y, r, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(255,255,255,${1 - t})`;
+          ctx.lineWidth   = 3.5 * (1 - t) + 0.5;
+          ctx.stroke();
+        }
+
         requestAnimationFrame(loop);
       }
       requestAnimationFrame(loop);
+
+      // ── Shockwave API (used by scroll-transition IIFE) ──
+      const shockwaves = [];
+      window.triggerShockwave = function () {
+        shockwaves.push({
+          x:    window.innerWidth  / 2,
+          y:    window.innerHeight / 2,
+          maxR: Math.hypot(window.innerWidth / 2, window.innerHeight / 2) * 1.1,
+          born: performance.now(),
+          life: 500
+        });
+      };
     })();
 
     /* ═══════════════════════════════════════════════════
@@ -1884,6 +1928,76 @@
         });
       }, { threshold: 0.15 });
       els.forEach((el) => io.observe(el));
+    })();
+
+    /* ═══════════════════════════════════════════════════
+       BLACK HOLE SCROLL TRANSITION
+       – IntersectionObserver detects section-boundary crossings
+       – Leaving section children spiral inward (staggered)
+       – #bh-overlay expands 0%→150% then collapses
+       – Ring shockwave fires on shared cursor canvas
+    ═══════════════════════════════════════════════════ */
+    (function () {
+      const overlay  = document.getElementById('bh-overlay');
+      const sections = Array.from(document.querySelectorAll('section'));
+      if (!overlay || !sections.length) return;
+
+      let cooldown = false;
+
+      function triggerTransition (leaving) {
+        if (cooldown) return;
+        cooldown = true;
+
+        // 1. Spiral-inward on immediate children of the leaving section
+        const children = Array.from(leaving.children);
+        children.forEach((child, i) => {
+          const delay = i * 55;
+          child.style.transition = `transform 0.65s ease ${delay}ms, opacity 0.65s ease ${delay}ms`;
+          child.style.transform  = 'rotate(720deg) scale(0)';
+          child.style.opacity    = '0';
+        });
+
+        // 2. Expand black hole overlay
+        overlay.style.transition = 'clip-path 0.7s ease';
+        overlay.style.clipPath   = 'circle(150% at 50% 50%)';
+
+        // 3. Ring shockwave on canvas
+        if (typeof window.triggerShockwave === 'function') window.triggerShockwave();
+
+        // 4. Collapse overlay after expansion completes
+        setTimeout(() => {
+          overlay.style.transition = 'clip-path 0.5s ease';
+          overlay.style.clipPath   = 'circle(0% at 50% 50%)';
+        }, 720);
+
+        // 5. Reset spiral styles so elements recover when section is re-entered
+        setTimeout(() => {
+          children.forEach((child) => {
+            child.style.transition = '';
+            child.style.transform  = '';
+            child.style.opacity    = '';
+          });
+          cooldown = false;
+        }, 1400);
+      }
+
+      // Track previous intersecting state to detect true exits
+      // Initialize to false — IO fires immediately on observe, setting real state
+      const wasIntersecting = new Map(sections.map(s => [s, false]));
+
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const wasIn = wasIntersecting.get(entry.target);
+          wasIntersecting.set(entry.target, entry.isIntersecting);
+
+          // Fire only when a section exits from the top (user scrolled DOWN past it)
+          if (wasIn && !entry.isIntersecting && entry.boundingClientRect.top < 0) {
+            triggerTransition(entry.target);
+          }
+        });
+      }, { threshold: 0 });
+
+      sections.forEach(s => io.observe(s));
     })();
   </script>
 </body>
