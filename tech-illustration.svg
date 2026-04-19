@@ -1,0 +1,91 @@
+<svg viewBox="0 0 420 480" xmlns="http://www.w3.org/2000/svg">
+  <!-- Corner brackets -->
+  <path d="M20,20 L20,8 L32,8" fill="none" stroke="#39d353" stroke-width="1.5" opacity="0.4"/>
+  <path d="M400,20 L400,8 L388,8" fill="none" stroke="#39d353" stroke-width="1.5" opacity="0.4"/>
+  <path d="M20,460 L20,472 L32,472" fill="none" stroke="#39d353" stroke-width="1.5" opacity="0.4"/>
+  <path d="M400,460 L400,472 L388,472" fill="none" stroke="#39d353" stroke-width="1.5" opacity="0.4"/>
+
+  <!-- Monitor body -->
+  <rect x="40" y="30" width="340" height="240" rx="12" fill="rgba(0,20,0,0.6)" stroke="#39d353" stroke-width="1.5"/>
+  <!-- Titlebar -->
+  <rect x="40" y="30" width="340" height="36" rx="12" fill="rgba(57,211,83,0.08)" stroke="#39d353" stroke-width="1.5"/>
+  <!-- Traffic lights -->
+  <circle cx="68" cy="48" r="7" fill="#ff5f57"/>
+  <circle cx="92" cy="48" r="7" fill="#febc2e"/>
+  <circle cx="116" cy="48" r="7" fill="#28c840"/>
+  <!-- Tab title -->
+  <text x="155" y="53" font-family="Courier New" font-size="11" fill="rgba(57,211,83,0.5)">bilal@dev: ~/portfolio</text>
+
+  <!-- Code lines -->
+  <text x="60" y="100" font-family="Courier New" font-size="12" fill="#7c9cf7">const</text>
+  <text x="105" y="100" font-family="Courier New" font-size="12" fill="#39d353"> bilal</text>
+  <text x="150" y="100" font-family="Courier New" font-size="12" fill="rgba(255,255,255,0.5)"> = {</text>
+
+  <text x="75" y="122" font-family="Courier New" font-size="12" fill="#f9c07a">name</text>
+  <text x="110" y="122" font-family="Courier New" font-size="12" fill="rgba(255,255,255,0.35)">:</text>
+  <text x="120" y="122" font-family="Courier New" font-size="12" fill="#f87171">"Bilal EL AMIN"</text>
+
+  <text x="75" y="144" font-family="Courier New" font-size="12" fill="#f9c07a">stack</text>
+  <text x="115" y="144" font-family="Courier New" font-size="12" fill="rgba(255,255,255,0.35)">:</text>
+  <text x="125" y="144" font-family="Courier New" font-size="12" fill="#39d353">["Java","Spring"]</text>
+
+  <text x="75" y="166" font-family="Courier New" font-size="12" fill="#f9c07a">city</text>
+  <text x="103" y="166" font-family="Courier New" font-size="12" fill="rgba(255,255,255,0.35)">:</text>
+  <text x="113" y="166" font-family="Courier New" font-size="12" fill="#f87171">"Fès, Morocco"</text>
+
+  <text x="75" y="188" font-family="Courier New" font-size="12" fill="#f9c07a">building</text>
+  <text x="130" y="188" font-family="Courier New" font-size="12" fill="rgba(255,255,255,0.35)">:</text>
+  <text x="140" y="188" font-family="Courier New" font-size="12" fill="#39d353">"SmartTrip"</text>
+
+  <text x="75" y="210" font-family="Courier New" font-size="12" fill="#f9c07a">available</text>
+  <text x="138" y="210" font-family="Courier New" font-size="12" fill="rgba(255,255,255,0.35)">:</text>
+  <text x="148" y="210" font-family="Courier New" font-size="12" fill="#4ade80">true</text>
+
+  <text x="60" y="232" font-family="Courier New" font-size="12" fill="rgba(255,255,255,0.5)">}</text>
+
+  <!-- Blinking cursor -->
+  <rect x="60" y="242" width="8" height="14" fill="#39d353">
+    <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
+  </rect>
+
+  <!-- Monitor stand -->
+  <rect x="185" y="270" width="50" height="28" rx="4" fill="rgba(57,211,83,0.06)" stroke="#39d353" stroke-width="1" opacity="0.7"/>
+  <rect x="155" y="296" width="110" height="8" rx="4" fill="rgba(57,211,83,0.08)" stroke="#39d353" stroke-width="1" opacity="0.7"/>
+
+  <!-- Floating tech badges -->
+  <g style="animation: badgeFloat1 4s ease-in-out infinite">
+    <rect x="20" y="320" width="80" height="28" rx="14" fill="rgba(57,211,83,0.08)" stroke="#39d353" stroke-width="1"/>
+    <text x="60" y="339" font-family="Courier New" font-size="11" fill="#39d353" text-anchor="middle">☕ Java</text>
+  </g>
+  <g style="animation: badgeFloat2 4.5s ease-in-out infinite">
+    <rect x="115" y="340" width="115" height="28" rx="14" fill="rgba(57,211,83,0.08)" stroke="#39d353" stroke-width="1"/>
+    <text x="172" y="359" font-family="Courier New" font-size="11" fill="#39d353" text-anchor="middle">🍃 Spring Boot</text>
+  </g>
+  <g style="animation: badgeFloat3 3.8s ease-in-out infinite">
+    <rect x="245" y="318" width="85" height="28" rx="14" fill="rgba(57,211,83,0.08)" stroke="#39d353" stroke-width="1"/>
+    <text x="287" y="337" font-family="Courier New" font-size="11" fill="#39d353" text-anchor="middle">📱 Kotlin</text>
+  </g>
+  <g style="animation: badgeFloat1 5s ease-in-out infinite reverse">
+    <rect x="345" y="345" width="60" height="28" rx="14" fill="rgba(57,211,83,0.08)" stroke="#39d353" stroke-width="1"/>
+    <text x="375" y="364" font-family="Courier New" font-size="11" fill="#39d353" text-anchor="middle">🐘 PG</text>
+  </g>
+  <g style="animation: badgeFloat2 3.5s ease-in-out infinite reverse">
+    <rect x="25" y="372" width="70" height="28" rx="14" fill="rgba(239,159,39,0.1)" stroke="#EF9F27" stroke-width="1"/>
+    <text x="60" y="391" font-family="Courier New" font-size="11" fill="#EF9F27" text-anchor="middle">🤖 AI</text>
+  </g>
+
+  <!-- Dashed connector lines -->
+  <line x1="100" y1="334" x2="115" y2="352" stroke="rgba(57,211,83,0.2)" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="230" y1="354" x2="245" y2="334" stroke="rgba(57,211,83,0.2)" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="335" y1="334" x2="345" y2="350" stroke="rgba(57,211,83,0.2)" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- Bottom git lines -->
+  <text x="40" y="432" font-family="Courier New" font-size="10" fill="rgba(57,211,83,0.4)">$ git commit -m "always learning"</text>
+  <text x="40" y="452" font-family="Courier New" font-size="10" fill="rgba(57,211,83,0.22)">▸ main ✓ ready to ship</text>
+
+  <style>
+    @keyframes badgeFloat1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    @keyframes badgeFloat2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    @keyframes badgeFloat3 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  </style>
+</svg>
