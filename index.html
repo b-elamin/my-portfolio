@@ -697,6 +697,16 @@
       z-index: 1999;
     }
 
+    /* ── Gravity Dot Field Canvas ── */
+    #gravity-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
     /* ── Main Content Fade-in ── */
     body.loading { overflow: hidden; }
 
@@ -720,6 +730,9 @@
       <span id="loader-pct">0%</span>
     </div>
   </div>
+
+  <!-- Gravity dot field -->
+  <canvas id="gravity-canvas"></canvas>
 
   <!-- Cursor canvas trail -->
   <canvas id="cursor-canvas"></canvas>
@@ -1607,6 +1620,113 @@
         tunnelLoop();
       }
 
+    })();
+
+    /* ═══════════════════════════════════════════════════
+       GRAVITY DOT FIELD — 120-dot grid, cursor gravity well
+    ═══════════════════════════════════════════════════ */
+    (function () {
+      const canvas = document.getElementById('gravity-canvas');
+      const ctx    = canvas.getContext('2d');
+
+      const COLS         = 12;
+      const ROWS         = 10;   // 12 × 10 = 120 dots
+      const GRAVITY_R    = 200;  // px — influence radius
+      const GRAVITY_STR  = 18000; // tuning constant for F = k / d²
+      const SPRING_K     = 0.08; // Hooke's law stiffness
+      const DAMPING      = 0.82; // velocity damping per frame
+      const BASE_R       = 2;    // default dot radius (px)
+      const MAX_R        = 6;    // dot radius at cursor
+
+      let W, H, cellW, cellH;
+      let mouse = { x: -9999, y: -9999 };
+
+      // ── Build dot array ────────────────────────────────
+      let dots = [];
+
+      function buildGrid () {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+        cellW = W / COLS;
+        cellH = H / ROWS;
+        dots = [];
+        for (let r = 0; r < ROWS; r++) {
+          for (let c = 0; c < COLS; c++) {
+            const ox = cellW * (c + 0.5);
+            const oy = cellH * (r + 0.5);
+            dots.push({ ox, oy, x: ox, y: oy, vx: 0, vy: 0 });
+          }
+        }
+      }
+
+      buildGrid();
+      window.addEventListener('resize', buildGrid);
+
+      // ── Track cursor (page coords) ─────────────────────
+      window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      });
+      window.addEventListener('mouseleave', () => {
+        mouse.x = -9999;
+        mouse.y = -9999;
+      });
+
+      // ── RAF loop ───────────────────────────────────────
+      function loop () {
+        ctx.clearRect(0, 0, W, H);
+
+        for (const d of dots) {
+          const dx   = mouse.x - d.x;
+          const dy   = mouse.y - d.y;
+          const dist2 = dx * dx + dy * dy;
+          const dist  = Math.sqrt(dist2) || 0.001;
+
+          if (dist < GRAVITY_R) {
+            // Inverse-square pull toward cursor: F = GRAVITY_STR / d²
+            const force = GRAVITY_STR / dist2;
+            d.vx += (dx / dist) * force;
+            d.vy += (dy / dist) * force;
+          }
+
+          // Hooke spring: pull back to origin
+          const odx = d.ox - d.x;
+          const ody = d.oy - d.y;
+          d.vx += odx * SPRING_K;
+          d.vy += ody * SPRING_K;
+
+          // Dampen and integrate
+          d.vx *= DAMPING;
+          d.vy *= DAMPING;
+          d.x  += d.vx;
+          d.y  += d.vy;
+
+          // Radius and glow based on proximity to cursor (reuse dist)
+          const near = Math.max(0, 1 - dist / GRAVITY_R);
+          const r    = BASE_R + near * (MAX_R - BASE_R);
+
+          if (near > 0.01) {
+            // Glowing dot
+            const grd = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, r * 3.5);
+            grd.addColorStop(0,   `rgba(255,255,255,${(0.9 * near + 0.1).toFixed(2)})`);
+            grd.addColorStop(0.4, `rgba(180,180,255,${(0.5 * near).toFixed(2)})`);
+            grd.addColorStop(1,   'rgba(100,100,255,0)');
+            ctx.beginPath();
+            ctx.arc(d.x, d.y, r * 3.5, 0, Math.PI * 2);
+            ctx.fillStyle = grd;
+            ctx.fill();
+          }
+
+          // Core dot
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${(0.18 + near * 0.72).toFixed(2)})`;
+          ctx.fill();
+        }
+
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
     })();
 
     /* ═══════════════════════════════════════════════════
