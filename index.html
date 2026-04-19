@@ -749,10 +749,46 @@
       font-size: 1.05rem;
     }
 
+    /* ── Contact info items ── */
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin: 0 auto 2rem;
+      max-width: 380px;
+      text-align: left;
+    }
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+    .contact-row .ci-icon {
+      font-size: 1rem;
+      width: 1.4rem;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .contact-row a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .contact-row a:hover { text-decoration: underline; }
+    .status-dot {
+      color: #22c55e;
+      font-weight: 700;
+    }
+
     /* ── Footer ── */
     footer {
       padding: 2rem;
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
       border-top: 1px solid rgba(255, 255, 255, 0.05);
       color: var(--muted);
       font-size: 0.85rem;
@@ -1032,7 +1068,7 @@
       <div class="hero-cta">
         <a href="#projects" class="btn btn-primary">view projects</a>
         <a href="#contact" class="btn btn-outline">get in touch</a>
-        <a href="https://github.com/b-elamin" class="btn btn-outline" target="_blank" rel="noopener">github ↗</a>
+        <a href="https://github.com/belamiin" class="btn btn-outline" target="_blank" rel="noopener">github ↗</a>
       </div>
     </div>
 
@@ -1237,11 +1273,34 @@
     <h2 class="section-title reveal">Let's build something together</h2>
     <p class="reveal">Have a project in mind or just want to say hello?<br/>
     My inbox is always open.</p>
-    <a href="mailto:hello@example.com" class="btn btn-primary reveal">Say Hello ✉</a>
+    <div class="contact-info reveal">
+      <div class="contact-row">
+        <span class="ci-icon">✉</span>
+        <a href="mailto:elaminbillal@gmail.com">elaminbillal@gmail.com</a>
+      </div>
+      <div class="contact-row">
+        <span class="ci-icon">⌥</span>
+        <a href="https://github.com/belamiin" target="_blank" rel="noopener">github.com/belamiin</a>
+      </div>
+      <div class="contact-row">
+        <span class="ci-icon">📍</span>
+        <span>Fès, Morocco 🇲🇦</span>
+      </div>
+      <div class="contact-row">
+        <span class="ci-icon">📞</span>
+        <span>+212 7 65 64 59 55</span>
+      </div>
+      <div class="contact-row">
+        <span class="ci-icon status-dot">●</span>
+        <span class="status-dot">open to internships</span>
+      </div>
+    </div>
+    <a href="mailto:elaminbillal@gmail.com" class="btn btn-primary reveal">Say Hello ✉</a>
   </section>
 
   <footer>
-    <span>Built with ❤ and a touch of magic · © 2026</span>
+    <span>~/b.elamin · built with passion · Fès, Morocco 🇲🇦</span>
+    <span>WE DO NOT STOP LEARNING</span>
   </footer>
 
   </div><!-- #main-content -->
