@@ -731,6 +731,70 @@
       transition-delay: 0.42s;
     }
 
+    /* ── GitHub Stats Section ── */
+    #github-stats {
+      padding: 7rem 2rem;
+      background: var(--bg);
+    }
+
+    .github-stats-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .stat-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 2.5rem 0 2.5rem;
+    }
+
+    .gh-stat-card {
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(57, 211, 83, 0.25);
+      border-radius: 10px;
+      padding: 1.4rem 1.2rem;
+      text-align: center;
+      font-family: 'Courier New', Courier, monospace;
+      transition: border-color 0.25s;
+    }
+
+    .gh-stat-card:hover {
+      border-color: rgba(57, 211, 83, 0.6);
+    }
+
+    .gh-stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #39d353;
+      line-height: 1.1;
+    }
+
+    .gh-stat-label {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.38);
+      margin-top: 0.4rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .gh-profile-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: #39d353;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.88rem;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(57, 211, 83, 0.35);
+      padding-bottom: 1px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .gh-profile-link:hover {
+      color: #22c55e;
+      border-color: #22c55e;
+    }
+
     /* ── Contact ── */
     #contact {
       padding: 7rem 2rem;
@@ -1009,6 +1073,7 @@
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#projects">Projects</a></li>
+      <li><a href="#github-stats">GitHub</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
@@ -1264,6 +1329,53 @@
         </div>
 
       </div>
+    </div>
+  </section>
+
+  <!-- GitHub Stats -->
+  <section id="github-stats">
+    <div class="github-stats-inner">
+      <p class="section-label reveal">GitHub</p>
+      <h2 class="section-title reveal">By the Numbers</h2>
+
+      <div class="stat-cards-grid">
+        <div class="gh-stat-card reveal">
+          <div class="gh-stat-value">3+</div>
+          <div class="gh-stat-label">Repositories</div>
+        </div>
+        <div class="gh-stat-card reveal">
+          <div class="gh-stat-value">183</div>
+          <div class="gh-stat-label">Profile Views</div>
+        </div>
+        <div class="gh-stat-card reveal">
+          <div class="gh-stat-value">2026</div>
+          <div class="gh-stat-label">Active Since</div>
+        </div>
+        <div class="gh-stat-card reveal">
+          <div class="gh-stat-value">Java</div>
+          <div class="gh-stat-label">Primary Language</div>
+        </div>
+      </div>
+
+      <div class="term-card reveal">
+        <div class="term-titlebar">
+          <span class="term-dot r"></span>
+          <span class="term-dot y"></span>
+          <span class="term-dot g"></span>
+          <span class="term-filename">git log --oneline</span>
+        </div>
+        <div class="term-body">
+          <div><span class="term-green">a4f2c1e</span> <span style="color:rgba(255,255,255,0.75)">feat(smarttrip): integrate AI recommendation engine for tourist routes</span></div>
+          <div><span class="term-green">b7d8e3a</span> <span style="color:rgba(255,255,255,0.75)">feat(auth): implement JWT refresh token flow with Spring Security</span></div>
+          <div><span class="term-green">c2a91f5</span> <span style="color:rgba(255,255,255,0.75)">feat(mobile): scaffold Kotlin app with Jetpack Compose navigation</span></div>
+          <div><span class="term-green">d56b0c8</span> <span style="color:rgba(255,255,255,0.75)">feat(parc-manager): add QR label generation and asset scan workflow</span></div>
+          <div><span class="term-green">e3f7d12</span> <span style="color:rgba(255,255,255,0.75)">feat(student-crud): multi-role auth and PDF export with Bootstrap 5</span></div>
+        </div>
+      </div>
+
+      <a href="https://github.com/belamiin" target="_blank" rel="noopener" class="gh-profile-link reveal">
+        → view full profile on github.com/belamiin
+      </a>
     </div>
   </section>
 
