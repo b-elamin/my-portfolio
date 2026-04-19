@@ -633,14 +633,100 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* ── Loading Screen ── */
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.65s ease;
+    }
+
+    #skull-wrap {
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      line-height: 1.3;
+      color: #dd1100;
+      text-shadow: 0 0 10px rgba(221, 17, 0, 0.65);
+    }
+
+    .skull-line {
+      display: block;
+      white-space: pre;
+    }
+
+    .skull-char {
+      display: inline-block;
+      white-space: pre;
+    }
+
+    #loader-bar-wrap {
+      margin-top: 1.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: #dd1100;
+      text-align: center;
+      text-shadow: 0 0 8px rgba(221, 17, 0, 0.45);
+    }
+
+    #loader-pct {
+      display: block;
+      font-size: 0.68rem;
+      margin-top: 0.4rem;
+      opacity: 0.7;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    /* ── Tunnel Canvas (shared: heartbeat bg during load, tunnel in hero after) ── */
+    #tunnel-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      display: block;
+    }
+
+    #tunnel-canvas.loading-mode {
+      position: fixed;
+      z-index: 1999;
+    }
+
+    /* ── Main Content Fade-in ── */
+    body.loading { overflow: hidden; }
+
+    #main-content {
+      opacity: 1;
+      transition: opacity 0.9s ease;
+    }
+
+    body.loading #main-content {
+      opacity: 0;
+    }
   </style>
 </head>
-<body>
+<body class="loading">
+
+  <!-- Loading Screen -->
+  <div id="loader">
+    <div id="skull-wrap"></div>
+    <div id="loader-bar-wrap">
+      <div id="loader-bar-line"></div>
+      <span id="loader-pct">0%</span>
+    </div>
+  </div>
 
   <!-- Cursor canvas trail -->
   <canvas id="cursor-canvas"></canvas>
   <div id="cursor-dot"></div>
   <div id="vignette"></div>
+
+  <div id="main-content">
 
   <!-- Nav -->
   <nav>
@@ -654,6 +740,7 @@
 
   <!-- Hero -->
   <section id="hero">
+    <canvas id="tunnel-canvas"></canvas>
     <!-- Animated SVG Blob Background -->
     <div class="blob-container">
       <svg class="blob-svg" viewBox="0 0 540 540" xmlns="http://www.w3.org/2000/svg">
@@ -994,6 +1081,8 @@
     <span>Built with ❤ and a touch of magic · © 2026</span>
   </footer>
 
+  </div><!-- #main-content -->
+
   <script>
     /* ═══════════════════════════════════════════════════
        CURSOR TRAIL — Canvas particle system
@@ -1278,6 +1367,246 @@
           vignette.classList.add('pulse');
         });
       });
+    })();
+
+    /* ═══════════════════════════════════════════════════
+       TUNNEL + LOADER — Shared Canvas
+       Phase 1: full-screen loading screen with heartbeat
+                pulse on canvas, skull typing, progress bar,
+                and shatter effect.
+       Phase 2: infinite spinning tunnel in hero background.
+    ═══════════════════════════════════════════════════ */
+    (function () {
+
+      // ── ASCII skull (all rows type simultaneously L→R) ──
+      const SKULL = [
+        "        ░░░░░░░░░░░░░░░░        ",
+        "      ░░░░░░░░░░░░░░░░░░░░      ",
+        "     ░░░░░░░░░░░░░░░░░░░░░░     ",
+        "    ░░░░░░░░░░░░░░░░░░░░░░░░    ",
+        "   ░░░░░░░░░░░░░░░░░░░░░░░░░░   ",
+        "   ░░░░   ░░░░░░░░░░   ░░░░░░   ",
+        "   ░░░░   ░░░░░░░░░░   ░░░░░░   ",
+        "   ░░░░░░░░░░░░░░░░░░░░░░░░░░   ",
+        "    ░░░░░░░░░░░░░░░░░░░░░░░░    ",
+        "    ░░░░░░░░░░░░░░░░░░░░░░░░    ",
+        "     ░░░░  ░░░░░░  ░░░░░░░░     ",
+        "      ░░░░░░░░░░░░░░░░░░░░      ",
+        "       ░░░░░░░░░░░░░░░░░░       ",
+        "        ░░░░░░░░░░░░░░░░        ",
+        "         ░░░░░░░░░░░░░░         ",
+      ];
+      const BAR_LEN   = 26;
+      const MS_PER_CH = 20;   // 20 ms per character as specified
+
+      const canvas    = document.getElementById('tunnel-canvas');
+      const ctx       = canvas.getContext('2d');
+      const loaderEl  = document.getElementById('loader');
+      const skullWrap = document.getElementById('skull-wrap');
+      const barEl     = document.getElementById('loader-bar-line');
+      const pctEl     = document.getElementById('loader-pct');
+
+      // ── Canvas resize ──────────────────────────────────
+      function resize () {
+        canvas.width  = canvas.offsetWidth  || window.innerWidth;
+        canvas.height = canvas.offsetHeight || window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+
+      // Start canvas in loading-mode (position:fixed, full-screen)
+      canvas.classList.add('loading-mode');
+      resize();
+
+      let phase = 'loading'; // 'loading' | 'shattering' | 'tunnel'
+
+      // ════════════════════════════════════════════════════
+      // PHASE 1 — LOADING SCREEN
+      // ════════════════════════════════════════════════════
+
+      // ── Heartbeat: fast-slow-fast, 0.8s cycle ─────────
+      const hbBase = performance.now();
+
+      function heartPulse (now) {
+        const t = ((now - hbBase) / 1000) % 0.8;
+        // Two sharp gaussian beats at ~60 ms and ~280 ms
+        const b1 = Math.exp(-Math.pow((t - 0.06) / 0.04, 2));
+        const b2 = Math.exp(-Math.pow((t - 0.28) / 0.04, 2));
+        return Math.max(b1, b2);
+      }
+
+      function drawHeartbeat (now) {
+        const w = canvas.width, h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, w, h);
+
+        const p   = heartPulse(now);
+        const rad = Math.min(w, h) * 0.6;
+        const grd = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, rad);
+        grd.addColorStop(0,    `rgba(180,0,0,${+(0.22 * p).toFixed(3)})`);
+        grd.addColorStop(0.45, `rgba(100,0,0,${+(0.12 * p).toFixed(3)})`);
+        grd.addColorStop(1,    'rgba(0,0,0,0)');
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      // ── Skull typing ───────────────────────────────────
+      let totalChars = 0;
+      SKULL.forEach(l => { totalChars += l.length; });
+
+      const lineData = SKULL.map(line => {
+        const div = document.createElement('div');
+        div.className = 'skull-line';
+        skullWrap.appendChild(div);
+        return { div, line, typed: 0 };
+      });
+
+      let allSpans  = [];
+      let charsDone = 0;
+      let lastTick  = 0;
+
+      // All rows type simultaneously left-to-right, 20 ms per char
+      function typeStep (now) {
+        if (lastTick === 0) lastTick = now;
+        const toAdd = Math.floor((now - lastTick) / MS_PER_CH);
+        if (toAdd === 0) return charsDone / totalChars;
+        lastTick += toAdd * MS_PER_CH;
+
+        for (const ld of lineData) {
+          if (ld.typed >= ld.line.length) continue;
+          const add = Math.min(toAdd, ld.line.length - ld.typed);
+          for (let ci = 0; ci < add; ci++) {
+            const sp = document.createElement('span');
+            sp.className   = 'skull-char';
+            sp.textContent = ld.line[ld.typed + ci];
+            ld.div.appendChild(sp);
+            allSpans.push(sp);
+            charsDone++;
+          }
+          ld.typed += add;
+        }
+        return charsDone / totalChars;
+      }
+
+      // ── Progress bar (░ → ▒ → ▓ → █) ─────────────────
+      function updateBar (p) {
+        const filled = Math.floor(p * BAR_LEN);
+        let s = '[';
+        for (let i = 0; i < BAR_LEN; i++) {
+          if (i < filled - 1)        s += '█';
+          else if (i === filled - 1) s += '▓';
+          else if (i === filled)     s += '▒';
+          else                       s += '░';
+        }
+        barEl.textContent = s + ']';
+        pctEl.textContent = Math.round(p * 100) + '%';
+      }
+
+      // ── Shatter ────────────────────────────────────────
+      function shatter () {
+        phase = 'shattering';
+        allSpans.forEach((sp, i) => {
+          const vx  = (Math.random() - 0.5) * 900;
+          const vy  = (Math.random() - 0.5) * 900;
+          const rot = (Math.random() - 0.5) * 720;
+          sp.style.transition = `transform 0.85s ease-in ${i * 5}ms,`
+                              + `opacity   0.85s ease-in ${i * 5}ms`;
+          sp.style.transform  = `translate(${vx}px,${vy}px) rotate(${rot}deg)`;
+          sp.style.opacity    = '0';
+        });
+
+        const waitMs = Math.min(allSpans.length * 5, 1400) + 900;
+        setTimeout(() => {
+          loaderEl.style.opacity = '0';
+          setTimeout(() => {
+            loaderEl.style.display = 'none';
+            document.body.classList.remove('loading');
+            // Return canvas to hero background position
+            canvas.classList.remove('loading-mode');
+            resize();
+            phase = 'tunnel';
+            startTunnel();
+          }, 680);
+        }, waitMs);
+      }
+
+      // ── Loading RAF loop ───────────────────────────────
+      function loadingLoop (now) {
+        if (phase !== 'loading') return;
+        drawHeartbeat(now);
+        const prog = typeStep(now);
+        updateBar(prog);
+        if (prog >= 1) {
+          updateBar(1);
+          shatter();
+        } else {
+          requestAnimationFrame(loadingLoop);
+        }
+      }
+      requestAnimationFrame(loadingLoop);
+
+      // ════════════════════════════════════════════════════
+      // PHASE 2 — INFINITE TUNNEL
+      // ════════════════════════════════════════════════════
+
+      const NUM_RINGS = 20;
+      // Evenly space rings: ring[i] starts at i/NUM_RINGS (0=center, 1=edge)
+      const rings = Array.from({ length: NUM_RINGS }, (_, i) => i / NUM_RINGS);
+      let   tunnelRot   = 0;
+      const BASE_SPD    = 0.012;
+      let   scrollBoost = 0;
+      let   prevSY      = window.scrollY;
+
+      window.addEventListener('scroll', () => {
+        const dy = Math.abs(window.scrollY - prevSY);
+        scrollBoost = Math.min(dy * 0.009, 0.18);
+        prevSY      = window.scrollY;
+      });
+
+      function drawTunnel () {
+        const w = canvas.width, h = canvas.height;
+        const spd = BASE_SPD + scrollBoost;
+        scrollBoost *= 0.91;   // decay each frame
+        tunnelRot   += 0.002;  // constant slow spin
+
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = '#020206';
+        ctx.fillRect(0, 0, w, h);
+
+        const maxD = Math.max(w, h) * 1.5;
+
+        for (let i = 0; i < NUM_RINGS; i++) {
+          rings[i] += spd / NUM_RINGS;
+          if (rings[i] >= 1) rings[i] -= 1;  // wrap: reset to center
+
+          const t  = rings[i];
+          // small ring (t≈0) → bright green; large ring (t≈1) → near black
+          const li = Math.round(2 + (1 - t) * 48);   // lightness 2 %→ 50 %
+          const sa = Math.round((1 - t) * 100);        // saturation 0 %→100 %
+          ctx.strokeStyle = `hsl(120,${sa}%,${li}%)`;
+          ctx.lineWidth   = 1 + (1 - t) * 0.8;
+
+          const rw = maxD * t;
+          const rh = maxD * t * (h / w);  // scale preserving aspect ratio
+
+          ctx.save();
+          ctx.translate(w / 2, h / 2);
+          ctx.rotate(tunnelRot);
+          ctx.strokeRect(-rw / 2, -rh / 2, rw, rh);
+          ctx.restore();
+        }
+      }
+
+      function tunnelLoop () {
+        drawTunnel();
+        requestAnimationFrame(tunnelLoop);
+      }
+
+      function startTunnel () {
+        resize();
+        tunnelLoop();
+      }
+
     })();
 
     /* ═══════════════════════════════════════════════════
