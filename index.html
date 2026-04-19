@@ -29,8 +29,8 @@
       --surface: #12121a;
       --text: #e8e8f0;
       --muted: #8888a8;
-      --accent: #7c5cfc;
-      --accent2: #fc5c9c;
+      --accent: #39d353;
+      --accent2: #22c55e;
     }
 
     html {
@@ -191,14 +191,11 @@
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--accent);
-      border: 1px solid rgba(124, 92, 252, 0.3);
+      border: 1px solid rgba(57,211,83,0.2);
       padding: 0.35rem 1rem;
       border-radius: 999px;
       margin-bottom: 1.5rem;
-      background: rgba(124, 92, 252, 0.08);
-    }
-
-    .hero-title {
+      background: rgba(57,211,83,0.08);
       font-size: clamp(3.5rem, 13vw, 11rem);
       font-weight: 900;
       line-height: 0.92;
@@ -379,7 +376,7 @@
     }
 
     .btn-primary:hover {
-      box-shadow: 0 8px 32px rgba(124, 92, 252, 0.55);
+      box-shadow: 0 8px 32px rgba(57, 211, 83, 0.55);
     }
 
     .btn-outline {
@@ -435,6 +432,7 @@
       color: var(--accent);
       margin-bottom: 0.75rem;
     }
+    .section-label { color: #39d353 !important; }
 
     .section-title {
       font-size: clamp(1.8rem, 4vw, 2.8rem);
@@ -451,9 +449,96 @@
     }
 
     @media (max-width: 768px) {
-      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { gap: 1rem; }
+      nav { padding: 1rem 1.25rem; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+
+      #hero {
+        padding: 5rem 1.25rem 3rem;
+        align-items: flex-start;
+        min-height: 100svh;
+      }
+      .hero-content {
+        padding-left: 0;
+        padding-right: 0;
+      }
+      .hero-photo-frame {
+        width: 100px; height: 100px;
+        margin: 0 0 1rem 0;
+      }
+      .hero-photo-img {
+        width: 100px; height: 100px;
+      }
+      .hero-photo-ring  { inset: -5px; }
+      .hero-photo-ring.ring2 { inset: -10px; }
+      .hero-title {
+        font-size: clamp(2.8rem, 16vw, 5rem);
+        letter-spacing: -2px;
+        line-height: 0.95;
+      }
+      .hero-title::after { margin-top: 0.8rem; }
+      .hero-sub  { font-size: 0.9rem; margin: 0 0 0.6rem; }
+      .hero-tagline { font-size: 0.85rem; margin: 0 0 1.2rem; }
+      .hero-stats { gap: 0.5rem; margin-bottom: 1.5rem; }
+      .hero-stats span { font-size: 0.78rem; }
+      .hero-cta { gap: 0.6rem; }
+      .btn { padding: 0.65rem 1.25rem; font-size: 0.85rem; }
+
+      #about {
+        padding: 4rem 1.25rem;
+        min-height: unset;
+        align-items: flex-start;
+      }
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .about-visual { display: none; }
+      #radar-wrap {
+        width: 100%;
+        max-width: 300px;
+        height: 300px;
+        margin: 1.5rem auto 0;
+      }
+      #radar-canvas { width: 300px; height: 300px; }
+
+      #journey { padding: 4rem 1.25rem; min-height: unset; }
+      .timeline { padding-left: 1.25rem; }
+
+      #projects { padding: 4rem 1.25rem; min-height: unset; align-items: flex-start; }
+      .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .card-scene { height: 280px; }
+
+      #github-stats { padding: 4rem 1.25rem; min-height: unset; align-items: flex-start; }
+      .stat-cards-grid { grid-template-columns: 1fr 1fr; }
+      .gh-stat-value { font-size: 1.6rem; }
+
+      #terminal { padding: 4rem 1.25rem; min-height: unset; align-items: flex-start; }
+      .ai-term-output { max-height: 300px; }
+
+      #contact {
+        padding: 4rem 1.25rem;
+        min-height: unset;
+        text-align: left;
+        align-items: flex-start;
+      }
+      .contact-info { margin: 0 0 1.5rem; }
+      .contact-form { max-width: 100%; }
+
+      footer {
+        padding: 1.5rem 1.25rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 0.4rem;
+        font-size: 0.78rem;
+      }
+
+      #gravity-canvas { display: none; }
+      #matrix-canvas  { opacity: 0.12; }
+      #theme-switcher { bottom: 1rem; right: 1rem; }
     }
 
     .about-text p {
@@ -501,6 +586,34 @@
     .term-body {
       padding: 1rem 1.2rem;
       line-height: 1.75;
+    }
+
+    /* ── Typewriter animation for bilal.json card ── */
+    .term-type > div {
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+    .term-type > div.term-line-visible {
+      opacity: 1;
+      transform: none;
+    }
+    .term-type::after {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 1em;
+      background: #39d353;
+      vertical-align: text-bottom;
+      margin-left: 2px;
+      opacity: 0;
+      animation: term-blink 0.8s step-start infinite;
+    }
+    .term-type.term-typing::after { opacity: 1; }
+    .term-type.term-done::after   { opacity: 0; }
+    @keyframes term-blink {
+      50% { opacity: 0; }
+      0%, 100% { opacity: 1; }
     }
 
     .term-key   { color: #7c9cf7; }
@@ -677,8 +790,8 @@
 
     .card-back {
       transform: rotateY(180deg);
-      background: rgba(124, 92, 252, 0.07);
-      border: 1px solid rgba(124, 92, 252, 0.22);
+      background: rgba(57, 211, 83, 0.05);
+      border: 1px solid rgba(57, 211, 83, 0.22);
     }
 
     /* Front face */
@@ -734,8 +847,8 @@
       font-size: 0.7rem;
       padding: 0.2rem 0.6rem;
       border-radius: 4px;
-      background: rgba(124, 92, 252, 0.12);
-      border: 1px solid rgba(124, 92, 252, 0.25);
+      background: rgba(57, 211, 83, 0.12);
+      border: 1px solid rgba(57, 211, 83, 0.25);
       color: var(--accent);
     }
 
@@ -861,6 +974,117 @@
       padding: 7rem 2rem;
       max-width: 700px;
       margin: 0 auto;
+      text-align: center;
+    }
+
+    /* ── Interactive Terminal Section ── */
+    #terminal {
+      padding: 7rem 2rem;
+      background: var(--bg);
+    }
+
+    .terminal-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .ai-term-card {
+      background: #0d0d14;
+      border: 1px solid rgba(57, 211, 83, 0.3);
+      border-radius: 12px;
+      overflow: hidden;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.84rem;
+      margin-top: 2.5rem;
+      box-shadow: 0 0 40px rgba(57, 211, 83, 0.06);
+    }
+
+    .ai-term-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.55rem 1rem;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(57, 211, 83, 0.15);
+    }
+
+    .ai-term-titlebar .term-filename {
+      flex: 1;
+      text-align: center;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.04em;
+    }
+
+    .ai-term-output {
+      padding: 1.1rem 1.3rem 0.5rem;
+      min-height: 280px;
+      max-height: 420px;
+      overflow-y: auto;
+      line-height: 1.8;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(57,211,83,0.2) transparent;
+    }
+
+    .ai-term-output::-webkit-scrollbar { width: 4px; }
+    .ai-term-output::-webkit-scrollbar-thumb {
+      background: rgba(57,211,83,0.2);
+      border-radius: 2px;
+    }
+
+    .ai-line { display: block; word-break: break-word; }
+    .ai-line.prompt  { color: #39d353; }
+    .ai-line.answer  { color: rgba(255,255,255,0.82); }
+    .ai-line.user-in { color: #7c9cf7; }
+    .ai-line.err     { color: #f97b7b; }
+    .ai-line.blank   { display: block; height: 0.5rem; }
+
+    .ai-cursor {
+      display: inline-block;
+      width: 7px;
+      height: 1em;
+      background: #39d353;
+      vertical-align: text-bottom;
+      animation: ai-blink 0.75s step-start infinite;
+    }
+    @keyframes ai-blink { 50% { opacity: 0; } }
+
+    .ai-term-inputrow {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.3rem 0.85rem;
+      border-top: 1px solid rgba(57, 211, 83, 0.12);
+    }
+
+    .ai-term-prompt-label {
+      color: #39d353;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.84rem;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .ai-term-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #7c9cf7;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.84rem;
+      caret-color: #39d353;
+    }
+
+    .ai-term-input::placeholder {
+      color: rgba(255,255,255,0.2);
+    }
+
+    .ai-term-hint {
+      margin-top: 0.9rem;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.74rem;
+      color: rgba(255,255,255,0.22);
       text-align: center;
     }
 
@@ -1060,7 +1284,7 @@
     .tech-svg { width: 100%; height: auto;
       filter: drop-shadow(0 0 18px rgba(57,211,83,0.12)); }
 
-    #hero, #about, #journey, #projects, #github-stats, #contact {
+    #hero, #about, #journey, #projects, #github-stats, #terminal, #contact {
       scroll-margin-top: 64px;
     }
 
@@ -1100,6 +1324,17 @@
     }
 
     #github-stats .github-stats-inner {
+      width: 100%;
+    }
+
+    #terminal {
+      padding: 5rem 2rem;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+    }
+
+    #terminal .terminal-inner {
       width: 100%;
     }
 
@@ -1166,11 +1401,6 @@
       cursor: pointer;
       line-height: 1;
     }
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .hamburger { display: flex; }
-    }
-
     /* ── Journey / Timeline Section ── */
     #journey {
       padding: 5rem 2rem;
@@ -1197,7 +1427,7 @@
       top: 0;
       bottom: 0;
       width: 2px;
-      background: linear-gradient(to bottom, var(--accent), #39d353, var(--accent2));
+      background: linear-gradient(to bottom, #39d353, #22c55e, #16a34a);
       border-radius: 2px;
     }
     .tl-item {
@@ -1215,7 +1445,7 @@
       border-radius: 50%;
       background: var(--accent);
       border: 2px solid var(--surface);
-      box-shadow: 0 0 8px rgba(124, 92, 252, 0.5);
+      box-shadow: 0 0 8px rgba(57, 211, 83, 0.5);
     }
     .tl-date {
       font-size: 0.75rem;
@@ -1332,16 +1562,16 @@
       font-size: 0.75rem;
       padding: 0.35rem 0.9rem;
       border-radius: 999px;
-      border: 1px solid rgba(124, 92, 252, 0.4);
+      border: 1px solid rgba(57, 211, 83, 0.4);
       color: var(--accent);
-      background: rgba(124, 92, 252, 0.08);
+      background: rgba(57, 211, 83, 0.08);
       text-decoration: none;
       font-weight: 600;
       transition: background 0.2s, border-color 0.2s;
       letter-spacing: 0.2px;
     }
     .card-link-btn:hover {
-      background: rgba(124, 92, 252, 0.2);
+      background: rgba(57, 211, 83, 0.2);
       border-color: var(--accent);
     }
 
@@ -1399,6 +1629,7 @@
       <li><a href="#journey">Journey</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#github-stats">GitHub</a></li>
+      <li><a href="#terminal">Terminal</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <button class="hamburger" id="hamburger-btn" aria-label="Open menu">
@@ -1411,6 +1642,7 @@
       <a href="#journey">Journey</a>
       <a href="#projects">Projects</a>
       <a href="#github-stats">GitHub</a>
+      <a href="#terminal">Terminal</a>
       <a href="#contact">Contact</a>
     </div>
   </nav>
@@ -1484,7 +1716,7 @@
   <section id="about">
     <div class="about-grid">
       <div class="about-text reveal">
-        <p class="section-label">About Me</p>
+        <p class="section-label">// about</p>
         <h2 class="section-title">Hello, I'm Bilal EL AMIN</h2>
 
         <div class="term-card">
@@ -1494,7 +1726,7 @@
             <span class="term-dot g"></span>
             <span class="term-filename">bilal.json</span>
           </div>
-          <div class="term-body">
+          <div class="term-body term-type">
             <div><span class="term-key">name</span><span class="term-colon">:</span> <span class="term-str">"Bilal EL AMIN"</span></div>
             <div><span class="term-key">role</span><span class="term-colon">:</span> <span class="term-str">"Full Stack Dev Student"</span></div>
             <div><span class="term-key">location</span><span class="term-colon">:</span> <span class="term-str">"Fès, Morocco 🇲🇦"</span></div>
@@ -1523,12 +1755,12 @@
           <svg class="tech-svg" viewBox="0 0 440 320" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="tg1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#7c5cfc" stop-opacity="0.18"/>
+                <stop offset="0%" stop-color="#39d353" stop-opacity="0.18"/>
                 <stop offset="100%" stop-color="#39d353" stop-opacity="0.18"/>
               </linearGradient>
               <linearGradient id="tg2" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stop-color="#39d353"/>
-                <stop offset="100%" stop-color="#7c5cfc"/>
+                <stop offset="100%" stop-color="#22c55e"/>
               </linearGradient>
             </defs>
             <!-- Background panel -->
@@ -1542,24 +1774,24 @@
             <rect x="44" y="88" width="160" height="7" rx="3.5" fill="rgba(255,255,255,0.13)"/>
             <rect x="60" y="104" width="120" height="7" rx="3.5" fill="rgba(57,211,83,0.45)"/>
             <rect x="60" y="120" width="180" height="7" rx="3.5" fill="rgba(255,255,255,0.13)"/>
-            <rect x="60" y="136" width="100" height="7" rx="3.5" fill="rgba(124,92,252,0.55)"/>
+            <rect x="60" y="136" width="100" height="7" rx="3.5" fill="rgba(57,211,83,0.55)"/>
             <rect x="44" y="152" width="70" height="7" rx="3.5" fill="rgba(255,255,255,0.13)"/>
             <rect x="44" y="168" width="140" height="7" rx="3.5" fill="rgba(57,211,83,0.35)"/>
             <rect x="60" y="184" width="90" height="7" rx="3.5" fill="rgba(249,192,122,0.5)"/>
             <rect x="60" y="200" width="150" height="7" rx="3.5" fill="rgba(255,255,255,0.13)"/>
-            <rect x="44" y="216" width="80" height="7" rx="3.5" fill="rgba(124,92,252,0.4)"/>
+            <rect x="44" y="216" width="80" height="7" rx="3.5" fill="rgba(57,211,83,0.4)"/>
             <!-- Right panel: node graph -->
             <circle cx="330" cy="100" r="22" fill="rgba(57,211,83,0.15)" stroke="#39d353" stroke-width="1.5"/>
             <text x="330" y="105" font-family="system-ui,sans-serif" font-size="13" fill="#39d353" text-anchor="middle" font-weight="700">&lt;/&gt;</text>
-            <circle cx="390" cy="160" r="16" fill="rgba(124,92,252,0.15)" stroke="#7c5cfc" stroke-width="1.5"/>
-            <text x="390" y="165" font-family="system-ui,sans-serif" font-size="11" fill="#7c5cfc" text-anchor="middle" font-weight="700">JS</text>
-            <circle cx="290" cy="190" r="16" fill="rgba(252,92,156,0.15)" stroke="#fc5c9c" stroke-width="1.5"/>
-            <text x="290" y="195" font-family="system-ui,sans-serif" font-size="10" fill="#fc5c9c" text-anchor="middle" font-weight="700">CSS</text>
+            <circle cx="390" cy="160" r="16" fill="rgba(57,211,83,0.15)" stroke="#39d353" stroke-width="1.5"/>
+            <text x="390" y="165" font-family="system-ui,sans-serif" font-size="11" fill="#39d353" text-anchor="middle" font-weight="700">JS</text>
+            <circle cx="290" cy="190" r="16" fill="rgba(34,197,94,0.15)" stroke="#22c55e" stroke-width="1.5"/>
+            <text x="290" y="195" font-family="system-ui,sans-serif" font-size="10" fill="#22c55e" text-anchor="middle" font-weight="700">CSS</text>
             <circle cx="360" cy="245" r="16" fill="rgba(249,192,122,0.15)" stroke="#f9c07a" stroke-width="1.5"/>
             <text x="360" y="250" font-family="system-ui,sans-serif" font-size="10" fill="#f9c07a" text-anchor="middle" font-weight="700">API</text>
             <line x1="330" y1="122" x2="310" y2="174" stroke="rgba(57,211,83,0.3)" stroke-width="1.2"/>
-            <line x1="330" y1="122" x2="374" y2="144" stroke="rgba(124,92,252,0.3)" stroke-width="1.2"/>
-            <line x1="306" y1="190" x2="344" y2="229" stroke="rgba(252,92,156,0.3)" stroke-width="1.2"/>
+            <line x1="330" y1="122" x2="374" y2="144" stroke="rgba(57,211,83,0.3)" stroke-width="1.2"/>
+            <line x1="306" y1="190" x2="344" y2="229" stroke="rgba(34,197,94,0.3)" stroke-width="1.2"/>
             <line x1="374" y1="176" x2="344" y2="229" stroke="rgba(249,192,122,0.3)" stroke-width="1.2"/>
           </svg>
         </div>
@@ -1570,7 +1802,7 @@
   <!-- Journey / Timeline -->
   <section id="journey">
     <div class="journey-inner">
-      <p class="section-label reveal">Journey</p>
+      <p class="section-label reveal">// journey</p>
       <h2 class="section-title reveal">Timeline</h2>
       <div class="timeline">
         <div class="tl-item reveal">
@@ -1604,7 +1836,7 @@
   <!-- Projects -->
   <section id="projects">
     <div class="projects-inner">
-      <p class="section-label reveal">Work</p>
+      <p class="section-label reveal">// projects</p>
       <h2 class="section-title reveal">Selected Projects</h2>
       <div class="projects-grid">
 
@@ -1722,7 +1954,7 @@
   <!-- GitHub Stats -->
   <section id="github-stats">
     <div class="github-stats-inner">
-      <p class="section-label reveal">GitHub</p>
+      <p class="section-label reveal">// github</p>
       <h2 class="section-title reveal">By the Numbers</h2>
 
       <div class="stat-cards-grid">
@@ -1766,9 +1998,42 @@
     </div>
   </section>
 
+  <!-- Interactive AI Terminal -->
+  <section id="terminal">
+    <div class="terminal-inner">
+      <p class="section-label reveal">// terminal</p>
+      <h2 class="section-title reveal">Ask me anything</h2>
+
+      <div class="ai-term-card reveal">
+        <div class="ai-term-titlebar">
+          <span class="term-dot r"></span>
+          <span class="term-dot y"></span>
+          <span class="term-dot g"></span>
+          <span class="term-filename">bilal@portfolio ~ — AI Terminal</span>
+        </div>
+        <div class="ai-term-output" id="ai-output" aria-live="polite" aria-label="Terminal output"></div>
+        <div class="ai-term-inputrow">
+          <span class="ai-term-prompt-label">visitor@portfolio:~$</span>
+          <input
+            class="ai-term-input"
+            id="ai-input"
+            type="text"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="type a command or press Enter to continue…"
+            aria-label="Terminal input"
+          />
+        </div>
+      </div>
+      <p class="ai-term-hint reveal">Try: <code>help</code> · <code>skills</code> · <code>projects</code> · <code>contact</code> · <code>clear</code></p>
+    </div>
+  </section>
+
   <!-- Contact -->
   <section id="contact">
-    <p class="section-label reveal">Contact</p>
+    <p class="section-label reveal">// contact</p>
     <h2 class="section-title reveal">Let's build something together</h2>
     <p class="reveal">Have a project in mind or just want to say hello?<br/>
     My inbox is always open.</p>
@@ -1994,6 +2259,10 @@
 
       // ── Shared render loop ─────────────────────────────
       function loop(now) {
+        if (window.__paused && window.__paused()) {
+          requestAnimationFrame(loop);
+          return;
+        }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // Cursor trail
@@ -2475,6 +2744,10 @@
       }
 
       function tunnelLoop () {
+        if (window.__paused && window.__paused()) {
+          requestAnimationFrame(tunnelLoop);
+          return;
+        }
         drawTunnel();
         requestAnimationFrame(tunnelLoop);
       }
@@ -2538,6 +2811,10 @@
 
       // ── RAF loop ───────────────────────────────────────
       function loop () {
+        if (window.__paused && window.__paused()) {
+          requestAnimationFrame(loop);
+          return;
+        }
         ctx.clearRect(0, 0, W, H);
 
         for (const d of dots) {
@@ -2607,6 +2884,44 @@
         });
       }, { threshold: 0.15 });
       els.forEach((el) => io.observe(el));
+    })();
+
+    /* ═══════════════════════════════════════════════════
+       TYPEWRITER — bilal.json term card
+       Reveals each row one-by-one when card scrolls into view.
+    ═══════════════════════════════════════════════════ */
+    (function () {
+      const termBody = document.querySelector('.term-type');
+      if (!termBody) return;
+      const rows = Array.from(termBody.children);
+      let started = false;
+
+      function runTypewriter() {
+        if (started) return;
+        started = true;
+        termBody.classList.add('term-typing');
+        rows.forEach(function (row, i) {
+          setTimeout(function () {
+            row.classList.add('term-line-visible');
+            if (i === rows.length - 1) {
+              setTimeout(function () {
+                termBody.classList.remove('term-typing');
+                termBody.classList.add('term-done');
+              }, 400);
+            }
+          }, i * 160);
+        });
+      }
+
+      const io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            runTypewriter();
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      io.observe(termBody);
     })();
 
     /* ═══════════════════════════════════════════════════
@@ -2868,6 +3183,27 @@
         ctx.stroke();
         ctx.restore();
 
+        // ── Category labels around radar ──────────────────
+        const CATEGORIES = [
+          { label: 'Backend',     angle: 30  },
+          { label: 'Mobile/Web',  angle: 93  },
+          { label: 'Databases',   angle: 161 },
+          { label: 'Languages',   angle: 221 },
+          { label: 'Tools',       angle: 286 },
+          { label: 'Learning',    angle: 341 },
+        ];
+        ctx.save();
+        ctx.font = '10px "Courier New", monospace';
+        ctx.fillStyle = 'rgba(0,255,65,0.45)';
+        ctx.textAlign = 'center';
+        for (const cat of CATEGORIES) {
+          const rad = (cat.angle - 90) * Math.PI / 180;
+          const lx = CX + Math.cos(rad) * (MAX_R + 22);
+          const ly = CY + Math.sin(rad) * (MAX_R + 22);
+          ctx.fillText(cat.label, lx, ly);
+        }
+        ctx.restore();
+
         // ── Afterglow arc (gradient behind sweep) ────────
         const sweepRad   = (sweepAngleDeg - 90) * Math.PI / 180;
         const trailStart = sweepRad - TRAIL_DEG * Math.PI / 180;
@@ -3019,6 +3355,7 @@
 
       function draw(now) {
         requestAnimationFrame(draw);
+        if (window.__paused && window.__paused()) return;
 
         // Cap dt to 50ms to avoid jumps after tab switch
         const dt = Math.min(now - lastFrame, 50);
@@ -3090,6 +3427,15 @@
       }
 
       requestAnimationFrame(draw);
+    })();
+
+    /* ── Page Visibility: pause heavy animations when tab hidden ── */
+    (function () {
+      let _paused = false;
+      document.addEventListener('visibilitychange', function () {
+        _paused = document.hidden;
+      });
+      window.__paused = function () { return _paused; };
     })();
   </script>
   <script>
@@ -3241,6 +3587,238 @@
       if (dot) dot.style.display = 'none';
       document.body.style.cursor = '';
     })();
+
+    /* ═══════════════════════════════════════════════════
+       INTERACTIVE AI TERMINAL
+    ═══════════════════════════════════════════════════ */
+    (function () {
+      const output  = document.getElementById('ai-output');
+      const input   = document.getElementById('ai-input');
+      if (!output || !input) return;
+
+      /* ── Knowledge base ── */
+      const KB = {
+        help: [
+          'Available commands:',
+          '  skills      — tech stack & tools',
+          '  projects    — selected work',
+          '  education   — background & studies',
+          '  contact     — reach Bilal',
+          '  about       — who am I?',
+          '  languages   — spoken languages',
+          '  goals       — what am I looking for?',
+          '  clear       — clear the terminal',
+          '',
+          'Or just ask me anything in plain English.'
+        ],
+        skills: [
+          'Backend  : Java · Spring Boot · PHP · Node.js',
+          'Frontend : HTML · CSS · JavaScript · Bootstrap',
+          'Mobile   : Kotlin · Jetpack Compose · Android',
+          'Database : MySQL · PostgreSQL · SQLite',
+          'DevOps   : Git · GitHub · Linux · Docker (learning)',
+          'Tools    : VS Code · IntelliJ · Postman · Figma'
+        ],
+        projects: [
+          '1. SmartTrip — AI-powered tourist route planner (Spring Boot + React)',
+          '2. Parc Manager — IT asset tracker with QR labels (PHP + MySQL)',
+          '3. Student CRUD — multi-role auth + PDF export (Bootstrap 5)',
+          '4. Mobile Wallet — Kotlin + Jetpack Compose fintech UI'
+        ],
+        education: [
+          'School  : Lycée Technique, Fès — Morocco',
+          'Degree  : BTS DAI (Développement des Applications Informatiques)',
+          'Years   : 2024 – 2026',
+          'Focus   : Full Stack Development · System Architecture'
+        ],
+        contact: [
+          'Email    : elaminbillal@gmail.com',
+          'GitHub   : github.com/belamiin',
+          'LinkedIn : linkedin.com/in/bilal-el-amin-316905314',
+          'Location : Fès, Morocco 🇲🇦'
+        ],
+        about: [
+          'I\'m Bilal EL AMIN — a Full Stack Developer Student from Fès.',
+          'I build web apps, REST APIs, and mobile experiences.',
+          'Driven by curiosity, I learn both sides of the stack.',
+          '"The most dangerous developer is the hungriest one."'
+        ],
+        languages: [
+          'Arabic   : native',
+          'English  : fluent',
+          'French   : conversational'
+        ],
+        goals: [
+          'Looking for an internship or junior dev role (2025/2026).',
+          'Interested in: backend systems, mobile apps, AI integration.',
+          'Open to remote or on-site opportunities worldwide.'
+        ]
+      };
+
+      /* ── Auto Q&A script ── */
+      const SCRIPT = [
+        { q: 'whoami',    a: KB.about    },
+        { q: 'skills',    a: KB.skills   },
+        { q: 'projects',  a: KB.projects },
+        { q: 'goals',     a: KB.goals    }
+      ];
+
+      /* ── Helpers ── */
+      function appendLine(text, cls) {
+        const el = document.createElement('span');
+        el.className = 'ai-line ' + (cls || 'answer');
+        el.textContent = text;
+        output.appendChild(el);
+        output.scrollTop = output.scrollHeight;
+        return el;
+      }
+
+      function appendBlank() {
+        const el = document.createElement('span');
+        el.className = 'ai-line blank';
+        output.appendChild(el);
+        output.scrollTop = output.scrollHeight;
+      }
+
+      /* Typing cursor attached to the last line */
+      let cursorEl = null;
+      function showCursor() {
+        removeCursor();
+        cursorEl = document.createElement('span');
+        cursorEl.className = 'ai-cursor';
+        output.appendChild(cursorEl);
+        output.scrollTop = output.scrollHeight;
+      }
+      function removeCursor() {
+        if (cursorEl && cursorEl.parentNode) cursorEl.parentNode.removeChild(cursorEl);
+        cursorEl = null;
+      }
+
+      /* Type a single string character by character */
+      function typeString(str, cls, speed, cb) {
+        removeCursor();
+        const el = document.createElement('span');
+        el.className = 'ai-line ' + (cls || 'answer');
+        output.appendChild(el);
+        showCursor();
+        let i = 0;
+        function tick() {
+          if (i < str.length) {
+            el.textContent += str[i++];
+            if (cursorEl) output.appendChild(cursorEl); // keep cursor at end
+            output.scrollTop = output.scrollHeight;
+            setTimeout(tick, speed + (Math.random() * speed * 0.6 | 0));
+          } else {
+            if (cb) cb();
+          }
+        }
+        tick();
+      }
+
+      /* Print an array of answer lines instantly (after a short delay) */
+      function printLines(lines, delay, cb) {
+        let idx = 0;
+        function next() {
+          if (idx >= lines.length) { if (cb) cb(); return; }
+          const line = lines[idx++];
+          appendLine(line, 'answer');
+          setTimeout(next, 28);
+        }
+        setTimeout(next, delay);
+      }
+
+      /* ── Auto-play the Q&A script ── */
+      let scriptIdx = 0;
+      let autoRunning = false;
+      let autoTimer = null;
+      let paused = false; // paused while user is typing
+
+      function runNextScript() {
+        if (paused || scriptIdx >= SCRIPT.length) {
+          autoRunning = false;
+          removeCursor();
+          appendBlank();
+          appendLine('— auto-demo complete. Type a command below. —', 'err');
+          appendBlank();
+          return;
+        }
+        autoRunning = true;
+        const item = SCRIPT[scriptIdx++];
+        appendBlank();
+        typeString('visitor@portfolio:~$ ' + item.q, 'prompt', 38, function () {
+          removeCursor();
+          printLines(item.a, 180, function () {
+            autoTimer = setTimeout(runNextScript, 1400);
+          });
+        });
+      }
+
+      /* ── Intersection observer: start auto-play when section is visible ── */
+      let started = false;
+      const sectionObs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting && !started) {
+            started = true;
+            sectionObs.unobserve(e.target);
+            setTimeout(runNextScript, 600);
+          }
+        });
+      }, { threshold: 0.25 });
+      const termSection = document.getElementById('terminal');
+      if (termSection) sectionObs.observe(termSection);
+
+      /* ── User input handler ── */
+      function handleCommand(raw) {
+        const cmd = raw.trim().toLowerCase();
+        if (!cmd) return;
+
+        /* pause auto-play */
+        paused = true;
+        if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+        removeCursor();
+
+        appendBlank();
+        appendLine('visitor@portfolio:~$ ' + raw.trim(), 'user-in');
+
+        if (cmd === 'clear') {
+          output.innerHTML = '';
+          return;
+        }
+
+        let lines = null;
+        /* exact match */
+        if (KB[cmd]) {
+          lines = KB[cmd];
+        } else {
+          /* fuzzy keyword search */
+          for (const key of Object.keys(KB)) {
+            if (cmd.includes(key) || key.includes(cmd)) {
+              lines = KB[key];
+              break;
+            }
+          }
+        }
+
+        if (lines) {
+          printLines(lines, 80, null);
+        } else {
+          appendLine('command not found: ' + cmd + ' — try `help`', 'err');
+        }
+      }
+
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          const val = input.value;
+          input.value = '';
+          handleCommand(val);
+        }
+      });
+
+      /* Click anywhere on card to focus input */
+      const card = document.querySelector('.ai-term-card');
+      if (card) card.addEventListener('click', function () { input.focus(); });
+    })();
+
   </script>
 </body>
 </html>
