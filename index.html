@@ -243,20 +243,50 @@
       -webkit-text-fill-color: transparent;
     }
 
-    .hero-avatar {
-      width: 88px;
-      height: 88px;
-      border-radius: 50%;
-      border: 2px solid #39d353;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #39d353;
-      background: rgba(57, 211, 83, 0.08);
+    .hero-photo-frame {
+      position: relative;
+      width: 130px;
+      height: 130px;
       margin: 0 auto 1.5rem;
-      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .hero-photo-ring {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px solid rgba(57, 211, 83, 0.6);
+      animation: ring-spin 8s linear infinite;
+    }
+
+    .hero-photo-ring.ring2 {
+      inset: -13px;
+      border-color: rgba(57, 211, 83, 0.25);
+      border-style: dashed;
+      animation-duration: 14s;
+      animation-direction: reverse;
+    }
+
+    @keyframes ring-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .hero-photo-img {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      border: 2px solid #39d353;
+      filter: brightness(1.05) contrast(1.05);
+    }
+
+    .hero-photo-glow {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      box-shadow: 0 0 28px rgba(57, 211, 83, 0.35), 0 0 60px rgba(57, 211, 83, 0.12);
+      pointer-events: none;
     }
 
     .hero-sub {
@@ -1118,7 +1148,12 @@
     </div>
 
     <div class="hero-content">
-      <div class="hero-avatar">B.A</div>
+      <div class="hero-photo-frame">
+        <div class="hero-photo-ring"></div>
+        <div class="hero-photo-ring ring2"></div>
+        <img src="photo.jpeg" alt="Bilal EL AMIN" class="hero-photo-img">
+        <div class="hero-photo-glow"></div>
+      </div>
       <div class="hero-tag">✦ Available for work</div>
       <h1 class="hero-title">Bilal EL AMIN</h1>
       <p class="hero-sub">Full Stack Developer Student · Fès, Morocco 🇲🇦</p>
