@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Portfolio</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --text: #e8e8f0;
+      --muted: #8888a8;
+      --accent: #7c5cfc;
+      --accent2: #fc5c9c;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      cursor: none;
+    }
+
+    /* ── Cursor Trail Canvas ── */
+    #cursor-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── Custom cursor dot ── */
+    #cursor-dot {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: #fff;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, opacity 0.2s ease;
+      mix-blend-mode: difference;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 3rem;
+      background: rgba(10, 10, 15, 0.7);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    /* ── Hero Section ── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 6rem 2rem 4rem;
+    }
+
+    /* SVG Blob background */
+    .blob-container {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .blob-svg {
+      width: min(700px, 90vw);
+      height: min(700px, 90vw);
+      opacity: 0.18;
+      filter: blur(2px);
+    }
+
+    .blob-path {
+      fill: url(#blob-gradient);
+    }
+
+    /* Second, smaller blob for depth */
+    .blob-svg-2 {
+      position: absolute;
+      width: min(400px, 60vw);
+      height: min(400px, 60vw);
+      opacity: 0.12;
+      filter: blur(4px);
+      transform: translate(25%, 20%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 800px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(124, 92, 252, 0.3);
+      padding: 0.35rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+      background: rgba(124, 92, 252, 0.08);
+    }
+
+    .hero-title {
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-title .line-accent {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--muted);
+      max-width: 540px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 0.8rem 2rem;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.2px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(124, 92, 252, 0.35);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 8px 32px rgba(124, 92, 252, 0.55);
+    }
+
+    .btn-outline {
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Scroll hint */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      animation: scrollBounce 2s ease-in-out infinite;
+    }
+
+    .scroll-hint svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--muted);
+    }
+
+    @keyframes scrollBounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ── About Section ── */
+    #about {
+      padding: 7rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1rem; }
+    }
+
+    .about-text p {
+      color: var(--muted);
+      margin-bottom: 1rem;
+      font-size: 1.05rem;
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+    }
+
+    .skill-tag {
+      padding: 0.35rem 0.9rem;
+      border-radius: 6px;
+      background: rgba(124, 92, 252, 0.1);
+      border: 1px solid rgba(124, 92, 252, 0.2);
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+
+    .about-visual {
+      display: flex;
+      justify-content: center;
+    }
+
+    .avatar-blob {
+      position: relative;
+      width: 280px;
+      height: 280px;
+    }
+
+    .avatar-blob svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── Projects Section ── */
+    #projects {
+      padding: 7rem 2rem;
+      background: var(--surface);
+    }
+
+    .projects-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .project-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(124, 92, 252, 0.3);
+      box-shadow: 0 8px 40px rgba(124, 92, 252, 0.12);
+    }
+
+    .project-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .project-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+
+    .project-desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .project-tag {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--muted);
+    }
+
+    /* ── Contact ── */
+    #contact {
+      padding: 7rem 2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    #contact .section-title {
+      margin-bottom: 1rem;
+    }
+
+    #contact p {
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      font-size: 1.05rem;
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ── Blob animation keyframes ── */
+    @keyframes blobMorph1 {
+      0%   { d: path("M440,280Q430,360,360,400Q290,440,210,410Q130,380,110,300Q90,220,140,160Q190,100,270,90Q350,80,410,140Q470,200,440,280Z"); }
+      25%  { d: path("M450,270Q450,360,375,415Q300,470,210,430Q120,390,100,300Q80,210,140,150Q200,90,295,85Q390,80,435,165Q480,250,450,270Z"); }
+      50%  { d: path("M420,265Q410,350,340,405Q270,460,185,425Q100,390,90,300Q80,210,145,150Q210,90,305,92Q400,94,430,180Q460,266,420,265Z"); }
+      75%  { d: path("M445,285Q440,375,365,420Q290,465,200,430Q110,395,100,305Q90,215,150,155Q210,95,300,88Q390,81,430,168Q470,255,445,285Z"); }
+      100% { d: path("M440,280Q430,360,360,400Q290,440,210,410Q130,380,110,300Q90,220,140,160Q190,100,270,90Q350,80,410,140Q470,200,440,280Z"); }
+    }
+
+    @keyframes blobMorph2 {
+      0%   { d: path("M380,250Q370,330,305,375Q240,420,165,385Q90,350,85,270Q80,190,135,140Q190,90,270,92Q350,94,375,170Q400,246,380,250Z"); }
+      33%  { d: path("M390,245Q385,335,315,385Q245,435,165,395Q85,355,82,270Q79,185,138,132Q197,79,280,84Q363,89,382,165Q401,241,390,245Z"); }
+      66%  { d: path("M375,255Q368,340,298,388Q228,436,152,400Q76,364,78,278Q80,192,138,140Q196,88,278,86Q360,84,374,168Q388,252,375,255Z"); }
+      100% { d: path("M380,250Q370,330,305,375Q240,420,165,385Q90,350,85,270Q80,190,135,140Q190,90,270,92Q350,94,375,170Q400,246,380,250Z"); }
+    }
+
+    @keyframes blobRotate {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    @keyframes blobRotate2 {
+      from { transform: rotate(0deg) translate(25%, 20%); }
+      to   { transform: rotate(-360deg) translate(25%, 20%); }
+    }
+
+    @keyframes avatarMorph {
+      0%   { d: path("M130,100Q160,50,200,60Q240,70,260,100Q280,130,265,165Q250,200,215,215Q180,230,148,215Q116,200,105,165Q94,130,130,100Z"); }
+      33%  { d: path("M125,95Q158,45,202,58Q246,71,265,105Q284,139,268,172Q252,205,214,218Q176,231,144,216Q112,201,103,165Q94,129,125,95Z"); }
+      66%  { d: path("M132,102Q163,52,204,64Q245,76,263,108Q281,140,266,174Q251,208,213,219Q175,230,143,215Q111,200,104,164Q97,128,132,102Z"); }
+      100% { d: path("M130,100Q160,50,200,60Q240,70,260,100Q280,130,265,165Q250,200,215,215Q180,230,148,215Q116,200,105,165Q94,130,130,100Z"); }
+    }
+
+    .blob-animate-1 {
+      animation: blobMorph1 12s ease-in-out infinite, blobRotate 30s linear infinite;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+
+    .blob-animate-2 {
+      animation: blobMorph2 9s ease-in-out infinite reverse;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+
+    .blob-svg-2 {
+      animation: blobRotate2 40s linear infinite reverse;
+    }
+
+    .avatar-morph {
+      animation: avatarMorph 8s ease-in-out infinite;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+
+    /* Fade-in on scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor canvas trail -->
+  <canvas id="cursor-canvas"></canvas>
+  <div id="cursor-dot"></div>
+
+  <!-- Nav -->
+  <nav>
+    <span class="nav-logo">✦ Portfolio</span>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section id="hero">
+    <!-- Animated SVG Blob Background -->
+    <div class="blob-container">
+      <svg class="blob-svg" viewBox="0 0 540 540" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="blob-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#7c5cfc"/>
+            <stop offset="50%" stop-color="#b45cfc"/>
+            <stop offset="100%" stop-color="#fc5c9c"/>
+          </linearGradient>
+          <filter id="blob-glow">
+            <feGaussianBlur stdDeviation="8" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <path
+          class="blob-path blob-animate-1"
+          d="M440,280Q430,360,360,400Q290,440,210,410Q130,380,110,300Q90,220,140,160Q190,100,270,90Q350,80,410,140Q470,200,440,280Z"
+          filter="url(#blob-glow)"
+        />
+      </svg>
+
+      <svg class="blob-svg-2 blob-svg" viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="blob-gradient-2" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#5c9cfc"/>
+            <stop offset="100%" stop-color="#fc5c9c"/>
+          </linearGradient>
+        </defs>
+        <path
+          class="blob-path blob-animate-2"
+          fill="url(#blob-gradient-2)"
+          d="M380,250Q370,330,305,375Q240,420,165,385Q90,350,85,270Q80,190,135,140Q190,90,270,92Q350,94,375,170Q400,246,380,250Z"
+        />
+      </svg>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-tag">✦ Available for work</div>
+      <h1 class="hero-title">
+        Crafting digital<br/>
+        <span class="line-accent">experiences</span>
+      </h1>
+      <p class="hero-sub">
+        Full-stack developer &amp; creative technologist. I build beautiful,
+        performant interfaces and robust back-end systems.
+      </p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">See My Work</a>
+        <a href="#contact" class="btn btn-outline">Get In Touch</a>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <span>scroll</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p class="section-label">About Me</p>
+        <h2 class="section-title">Hello, I'm a developer who loves creating</h2>
+        <p>I specialize in building pixel-perfect UIs and scalable APIs. With a deep
+        passion for animation and interaction design, I turn ideas into immersive web
+        experiences.</p>
+        <p>When I'm not writing code you'll find me exploring generative art,
+        open-source tooling, and the intersection of design and engineering.</p>
+        <div class="skills-list">
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">TypeScript</span>
+          <span class="skill-tag">React</span>
+          <span class="skill-tag">Node.js</span>
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">WebGL</span>
+          <span class="skill-tag">CSS Animation</span>
+          <span class="skill-tag">SVG</span>
+          <span class="skill-tag">Canvas API</span>
+        </div>
+      </div>
+
+      <div class="about-visual reveal">
+        <div class="avatar-blob">
+          <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="avatar-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#7c5cfc" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#fc5c9c" stop-opacity="0.6"/>
+              </linearGradient>
+              <clipPath id="avatar-clip">
+                <path class="avatar-morph"
+                  d="M130,100Q160,50,200,60Q240,70,260,100Q280,130,265,165Q250,200,215,215Q180,230,148,215Q116,200,105,165Q94,130,130,100Z"/>
+              </clipPath>
+            </defs>
+            <!-- Blob fill -->
+            <path class="avatar-morph"
+              fill="url(#avatar-grad)"
+              d="M130,100Q160,50,200,60Q240,70,260,100Q280,130,265,165Q250,200,215,215Q180,230,148,215Q116,200,105,165Q94,130,130,100Z"/>
+            <!-- Grid pattern inside -->
+            <g clip-path="url(#avatar-clip)" opacity="0.5">
+              <line x1="100" y1="60" x2="100" y2="230" stroke="#fff" stroke-width="0.5"/>
+              <line x1="130" y1="50" x2="130" y2="230" stroke="#fff" stroke-width="0.5"/>
+              <line x1="160" y1="50" x2="160" y2="230" stroke="#fff" stroke-width="0.5"/>
+              <line x1="190" y1="52" x2="190" y2="228" stroke="#fff" stroke-width="0.5"/>
+              <line x1="220" y1="62" x2="220" y2="218" stroke="#fff" stroke-width="0.5"/>
+              <line x1="250" y1="80" x2="250" y2="205" stroke="#fff" stroke-width="0.5"/>
+              <line x1="90" y1="90" x2="265" y2="90" stroke="#fff" stroke-width="0.5"/>
+              <line x1="88" y1="115" x2="275" y2="115" stroke="#fff" stroke-width="0.5"/>
+              <line x1="88" y1="140" x2="278" y2="140" stroke="#fff" stroke-width="0.5"/>
+              <line x1="90" y1="165" x2="276" y2="165" stroke="#fff" stroke-width="0.5"/>
+              <line x1="96" y1="190" x2="268" y2="190" stroke="#fff" stroke-width="0.5"/>
+            </g>
+            <!-- Initials -->
+            <text x="200" y="168" font-family="system-ui,sans-serif" font-size="52"
+              font-weight="800" fill="#fff" text-anchor="middle" opacity="0.9">✦</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects">
+    <div class="projects-inner">
+      <p class="section-label reveal">Work</p>
+      <h2 class="section-title reveal">Selected Projects</h2>
+      <div class="projects-grid">
+
+        <div class="project-card reveal">
+          <div class="project-icon">🌌</div>
+          <h3 class="project-title">Cosmos Dashboard</h3>
+          <p class="project-desc">Real-time data visualization platform with WebGL-accelerated charts and live streaming analytics.</p>
+          <div class="project-tags">
+            <span class="project-tag">React</span>
+            <span class="project-tag">WebGL</span>
+            <span class="project-tag">D3.js</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal">
+          <div class="project-icon">🔮</div>
+          <h3 class="project-title">Aura AI</h3>
+          <p class="project-desc">Generative UI toolkit that transforms natural-language prompts into interactive React components on the fly.</p>
+          <div class="project-tags">
+            <span class="project-tag">TypeScript</span>
+            <span class="project-tag">LLM API</span>
+            <span class="project-tag">Next.js</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal">
+          <div class="project-icon">⚡</div>
+          <h3 class="project-title">Flux Engine</h3>
+          <p class="project-desc">Lightweight state-management library with time-travel debugging and automatic memoization.</p>
+          <div class="project-tags">
+            <span class="project-tag">JavaScript</span>
+            <span class="project-tag">Open Source</span>
+            <span class="project-tag">npm</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal">
+          <div class="project-icon">🎨</div>
+          <h3 class="project-title">Palette Studio</h3>
+          <p class="project-desc">Browser-based creative coding environment with live Canvas/WebGL output and shareable sketches.</p>
+          <div class="project-tags">
+            <span class="project-tag">Canvas API</span>
+            <span class="project-tag">GLSL</span>
+            <span class="project-tag">Web Workers</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal">
+          <div class="project-icon">🛸</div>
+          <h3 class="project-title">Orbit CMS</h3>
+          <p class="project-desc">Headless content platform with visual field builder, multi-environment workflows, and edge-cached delivery.</p>
+          <div class="project-tags">
+            <span class="project-tag">Node.js</span>
+            <span class="project-tag">GraphQL</span>
+            <span class="project-tag">PostgreSQL</span>
+          </div>
+        </div>
+
+        <div class="project-card reveal">
+          <div class="project-icon">🎵</div>
+          <h3 class="project-title">Waveform</h3>
+          <p class="project-desc">Collaborative music production tool with Web Audio API synthesis and real-time multi-user editing.</p>
+          <div class="project-tags">
+            <span class="project-tag">Web Audio API</span>
+            <span class="project-tag">WebSockets</span>
+            <span class="project-tag">Rust/WASM</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <p class="section-label reveal">Contact</p>
+    <h2 class="section-title reveal">Let's build something together</h2>
+    <p class="reveal">Have a project in mind or just want to say hello?<br/>
+    My inbox is always open.</p>
+    <a href="mailto:hello@example.com" class="btn btn-primary reveal">Say Hello ✉</a>
+  </section>
+
+  <footer>
+    <span>Built with ❤ and a touch of magic · © 2026</span>
+  </footer>
+
+  <script>
+    /* ═══════════════════════════════════════════════════
+       CURSOR TRAIL — Canvas particle system
+    ═══════════════════════════════════════════════════ */
+    (function () {
+      const canvas = document.getElementById('cursor-canvas');
+      const ctx    = canvas.getContext('2d');
+      const dot    = document.getElementById('cursor-dot');
+
+      // Resize canvas to fill viewport
+      function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      // Particle pool
+      const particles = [];
+
+      // Hue cycles continuously across the colour wheel
+      let hue = 0;
+
+      class Particle {
+        constructor(x, y) {
+          this.x       = x;
+          this.y       = y;
+          this.size    = 4 + Math.random() * 8;          // 4–12 px
+          this.hue     = hue;
+          this.opacity = 1;
+          this.born    = performance.now();
+          this.life    = 600;                             // ms to fully fade
+          this.vy      = -(0.4 + Math.random() * 0.8);  // upward drift
+          this.vx      = (Math.random() - 0.5) * 1.2;   // x-wobble
+        }
+
+        update(now) {
+          const age     = now - this.born;
+          this.opacity  = Math.max(0, 1 - age / this.life);
+          this.x       += this.vx;
+          this.y       += this.vy;
+        }
+
+        draw() {
+          if (this.opacity <= 0) return;
+
+          // Outer glow
+          const grd = ctx.createRadialGradient(
+            this.x, this.y, 0,
+            this.x, this.y, this.size * 2.5
+          );
+          grd.addColorStop(0,   `hsla(${this.hue}, 100%, 75%, ${this.opacity})`);
+          grd.addColorStop(0.4, `hsla(${this.hue}, 100%, 60%, ${this.opacity * 0.6})`);
+          grd.addColorStop(1,   `hsla(${this.hue}, 100%, 50%, 0)`);
+
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size * 2.5, 0, Math.PI * 2);
+          ctx.fillStyle = grd;
+          ctx.fill();
+
+          // Bright core
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size * 0.5, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${this.hue}, 100%, 95%, ${this.opacity})`;
+          ctx.fill();
+        }
+
+        get isDead() {
+          return performance.now() - this.born >= this.life;
+        }
+      }
+
+      // Spawn particles on mouse move
+      let lastX = -9999, lastY = -9999;
+      document.addEventListener('mousemove', (e) => {
+        const mx = e.clientX;
+        const my = e.clientY;
+
+        // Move the custom cursor dot
+        dot.style.left = mx + 'px';
+        dot.style.top  = my + 'px';
+
+        // Advance hue each move event for a cycling rainbow trail
+        hue = (hue + 3) % 360;
+
+        // Throttle by distance to avoid too-dense clusters on slow moves
+        const dx = mx - lastX;
+        const dy = my - lastY;
+        if (dx * dx + dy * dy > 4) {   // spawn every ~2 px of movement
+          particles.push(new Particle(mx, my));
+          lastX = mx;
+          lastY = my;
+        }
+      });
+
+      // Render loop
+      function loop(now) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          if (p.isDead) {
+            particles.splice(i, 1);
+          } else {
+            p.update(now);
+            p.draw();
+          }
+        }
+
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+    })();
+
+    /* ═══════════════════════════════════════════════════
+       SCROLL REVEAL
+    ═══════════════════════════════════════════════════ */
+    (function () {
+      const els = document.querySelectorAll('.reveal');
+      const io  = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      els.forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>
