@@ -2071,6 +2071,10 @@
 
       // ── Shared render loop ─────────────────────────────
       function loop(now) {
+        if (window.__paused && window.__paused()) {
+          requestAnimationFrame(loop);
+          return;
+        }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // Cursor trail
@@ -2552,6 +2556,10 @@
       }
 
       function tunnelLoop () {
+        if (window.__paused && window.__paused()) {
+          requestAnimationFrame(tunnelLoop);
+          return;
+        }
         drawTunnel();
         requestAnimationFrame(tunnelLoop);
       }
@@ -2615,6 +2623,10 @@
 
       // ── RAF loop ───────────────────────────────────────
       function loop () {
+        if (window.__paused && window.__paused()) {
+          requestAnimationFrame(loop);
+          return;
+        }
         ctx.clearRect(0, 0, W, H);
 
         for (const d of dots) {
@@ -3117,6 +3129,7 @@
 
       function draw(now) {
         requestAnimationFrame(draw);
+        if (window.__paused && window.__paused()) return;
 
         // Cap dt to 50ms to avoid jumps after tab switch
         const dt = Math.min(now - lastFrame, 50);
@@ -3188,6 +3201,15 @@
       }
 
       requestAnimationFrame(draw);
+    })();
+
+    /* ── Page Visibility: pause heavy animations when tab hidden ── */
+    (function () {
+      let _paused = false;
+      document.addEventListener('visibilitychange', function () {
+        _paused = document.hidden;
+      });
+      window.__paused = function () { return _paused; };
     })();
   </script>
   <script>
