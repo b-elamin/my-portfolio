@@ -351,20 +351,68 @@
     }
 
     .skills-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-top: 1.5rem;
+      display: none;
     }
 
     .skill-tag {
-      padding: 0.35rem 0.9rem;
-      border-radius: 6px;
-      background: rgba(124, 92, 252, 0.1);
-      border: 1px solid rgba(124, 92, 252, 0.2);
-      color: var(--accent);
-      font-size: 0.82rem;
-      font-weight: 500;
+      display: none;
+    }
+
+    /* ── Radar / Sonar Skills ── */
+    #radar-wrap {
+      position: relative;
+      width: 360px;
+      height: 360px;
+      margin-top: 1.5rem;
+      border-radius: 50%;
+      overflow: visible;
+      flex-shrink: 0;
+    }
+
+    #radar-canvas {
+      display: block;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      cursor: crosshair;
+    }
+
+    /* Scanline overlay */
+    #radar-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(0,0,0,0.18) 3px,
+        rgba(0,0,0,0.18) 4px
+      );
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    #radar-tooltip {
+      position: fixed;
+      background: rgba(0, 20, 0, 0.92);
+      border: 1px solid #00ff41;
+      color: #00ff41;
+      font-family: 'Courier New', monospace;
+      font-size: 0.72rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 4px;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 10000;
+      opacity: 0;
+      transition: opacity 0.15s;
+      text-shadow: 0 0 6px #00ff41;
+    }
+
+    #radar-tooltip.visible {
+      opacity: 1;
     }
 
     .about-visual {
@@ -878,16 +926,8 @@
         experiences.</p>
         <p>When I'm not writing code you'll find me exploring generative art,
         open-source tooling, and the intersection of design and engineering.</p>
-        <div class="skills-list">
-          <span class="skill-tag">JavaScript</span>
-          <span class="skill-tag">TypeScript</span>
-          <span class="skill-tag">React</span>
-          <span class="skill-tag">Node.js</span>
-          <span class="skill-tag">Python</span>
-          <span class="skill-tag">WebGL</span>
-          <span class="skill-tag">CSS Animation</span>
-          <span class="skill-tag">SVG</span>
-          <span class="skill-tag">Canvas API</span>
+        <div id="radar-wrap">
+          <canvas id="radar-canvas" width="360" height="360"></canvas>
         </div>
       </div>
 
@@ -1998,6 +2038,264 @@
       }, { threshold: 0 });
 
       sections.forEach(s => io.observe(s));
+    })();
+
+    /* ═══════════════════════════════════════════════════
+       RADAR / SONAR SKILLS DISPLAY
+    ═══════════════════════════════════════════════════ */
+    (function () {
+      const canvas  = document.getElementById('radar-canvas');
+      if (!canvas) return;
+      const ctx     = canvas.getContext('2d');
+      const SIZE    = 360;
+      const CX      = SIZE / 2;
+      const CY      = SIZE / 2;
+      const MAX_R   = SIZE / 2 - 10;   // outermost ring radius
+      const RPM     = 2;               // rotations per minute
+      const RAD_PER_MS = (RPM * Math.PI * 2) / 60000;
+
+      // ── Tooltip ──────────────────────────────────────
+      const tooltip = document.createElement('div');
+      tooltip.id    = 'radar-tooltip';
+      document.body.appendChild(tooltip);
+
+      // ── Skill data ───────────────────────────────────
+      // category angles (degrees from top, clockwise):
+      //   Frontend   0-90, Backend 90-180, Creative 180-270, Tools 270-360
+      // proficiency 0-1 maps to radial distance fraction
+      const SKILLS = [
+        // Frontend  (0° - 80°)
+        { name: 'JavaScript',    cat: 10,  prof: 0.95 },
+        { name: 'TypeScript',    cat: 30,  prof: 0.90 },
+        { name: 'React',         cat: 52,  prof: 0.88 },
+        { name: 'CSS Animation', cat: 72,  prof: 0.85 },
+        // Backend  (90° - 170°)
+        { name: 'Node.js',       cat: 100, prof: 0.88 },
+        { name: 'Python',        cat: 130, prof: 0.80 },
+        { name: 'REST / GraphQL',cat: 158, prof: 0.78 },
+        // Creative  (190° - 260°)
+        { name: 'WebGL',         cat: 198, prof: 0.75 },
+        { name: 'Canvas API',    cat: 222, prof: 0.92 },
+        { name: 'SVG',           cat: 248, prof: 0.87 },
+        // Tools  (275° - 355°)
+        { name: 'Git / CI',      cat: 285, prof: 0.83 },
+        { name: 'Docker',        cat: 312, prof: 0.72 },
+        { name: 'Figma / Design',cat: 340, prof: 0.80 },
+      ];
+
+      // Convert polar (angle deg from top CW, radius fraction) → canvas XY
+      function polar(angleDeg, frac) {
+        const rad = (angleDeg - 90) * Math.PI / 180;
+        return {
+          x: CX + Math.cos(rad) * frac * MAX_R,
+          y: CY + Math.sin(rad) * frac * MAX_R
+        };
+      }
+
+      // Pre-compute canvas positions
+      SKILLS.forEach(s => {
+        const p = polar(s.cat, s.prof);
+        s.x = p.x;
+        s.y = p.y;
+        s.ping    = 0;   // ping brightness 0-1
+        s.ripples = [];  // [{r, a}] expanding ring ripples
+        s.trail   = [];  // [{x,y,a}] past positions for afterglow (not used here)
+      });
+
+      // ── Sweep state ───────────────────────────────────
+      let sweepAngleDeg = 0;   // 0 = top, grows clockwise
+      let lastTime      = null;
+
+      // Afterglow trail (arc of fading green behind sweep)
+      const TRAIL_DEG = 70;
+
+      // ── Hit-test ──────────────────────────────────────
+      const HIT_R = 14;
+      let hoveredSkill = null;
+
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = SIZE / rect.width;
+        const scaleY = SIZE / rect.height;
+        const mx = (e.clientX - rect.left) * scaleX;
+        const my = (e.clientY - rect.top)  * scaleY;
+
+        let found = null;
+        for (const s of SKILLS) {
+          const dx = mx - s.x, dy = my - s.y;
+          if (dx * dx + dy * dy < HIT_R * HIT_R) { found = s; break; }
+        }
+        hoveredSkill = found;
+        if (found) {
+          tooltip.textContent = `${found.name}  [${'█'.repeat(Math.round(found.prof * 10))}${'░'.repeat(10 - Math.round(found.prof * 10))}]  ${Math.round(found.prof * 100)}%`;
+          tooltip.style.left  = (e.clientX + 14) + 'px';
+          tooltip.style.top   = (e.clientY - 10) + 'px';
+          tooltip.classList.add('visible');
+        } else {
+          tooltip.classList.remove('visible');
+        }
+      });
+      canvas.addEventListener('mouseleave', () => {
+        hoveredSkill = null;
+        tooltip.classList.remove('visible');
+      });
+
+      // ── Draw ──────────────────────────────────────────
+      function draw(now) {
+        if (!lastTime) lastTime = now;
+        const dt = now - lastTime;
+        lastTime = now;
+
+        // Advance sweep angle
+        sweepAngleDeg = (sweepAngleDeg + dt * RAD_PER_MS * (180 / Math.PI)) % 360;
+
+        // Check pings: skill falls within PING_THRESHOLD_DEG of the sweep
+        const PING_THRESHOLD_DEG = 3.5; // degrees: window in which sweep activates a dot
+        for (const s of SKILLS) {
+          // angular distance (sweep just passed over s.cat)
+          let diff = (sweepAngleDeg - s.cat + 360) % 360;
+          if (diff < PING_THRESHOLD_DEG) {
+            s.ping = 1;
+            s.ripples.push({ r: 0, a: 1 });
+          }
+          // decay ping
+          s.ping = Math.max(0, s.ping - dt * 0.003);
+          // advance ripples
+          for (const rp of s.ripples) {
+            rp.r += dt * 0.07;
+            rp.a -= dt * 0.003;
+          }
+          s.ripples = s.ripples.filter(rp => rp.a > 0 && rp.r < MAX_R * 1.5);
+        }
+
+        ctx.clearRect(0, 0, SIZE, SIZE);
+
+        // ── Background ──────────────────────────────────
+        ctx.fillStyle = '#001800';
+        ctx.beginPath();
+        ctx.arc(CX, CY, MAX_R + 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        // ── Subtle grid (lines every 30°) ───────────────
+        ctx.save();
+        ctx.strokeStyle = 'rgba(0,60,0,0.35)';
+        ctx.lineWidth   = 0.5;
+        for (let a = 0; a < 360; a += 30) {
+          const rad = (a - 90) * Math.PI / 180;
+          ctx.beginPath();
+          ctx.moveTo(CX, CY);
+          ctx.lineTo(CX + Math.cos(rad) * (MAX_R + 10), CY + Math.sin(rad) * (MAX_R + 10));
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        // ── Concentric rings (4) ─────────────────────────
+        for (let i = 1; i <= 4; i++) {
+          const r = (i / 4) * MAX_R;
+          ctx.beginPath();
+          ctx.arc(CX, CY, r, 0, Math.PI * 2);
+          ctx.strokeStyle = i === 4 ? 'rgba(0,200,0,0.5)' : 'rgba(0,140,0,0.3)';
+          ctx.lineWidth   = i === 4 ? 1.5 : 0.8;
+          ctx.stroke();
+        }
+
+        // ── Crosshairs ───────────────────────────────────
+        ctx.save();
+        ctx.strokeStyle = 'rgba(0,180,0,0.4)';
+        ctx.lineWidth   = 1;
+        ctx.beginPath();
+        ctx.moveTo(CX, CY - MAX_R - 6);
+        ctx.lineTo(CX, CY + MAX_R + 6);
+        ctx.moveTo(CX - MAX_R - 6, CY);
+        ctx.lineTo(CX + MAX_R + 6, CY);
+        ctx.stroke();
+        ctx.restore();
+
+        // ── Afterglow arc (gradient behind sweep) ────────
+        const sweepRad   = (sweepAngleDeg - 90) * Math.PI / 180;
+        const trailStart = sweepRad - TRAIL_DEG * Math.PI / 180;
+        ctx.save();
+
+        // Draw as filled arc wedge sectors with increasing opacity toward sweep
+        const STEPS = 24;
+        for (let s = 0; s < STEPS; s++) {
+          const t0  = s / STEPS;
+          const t1  = (s + 1) / STEPS;
+          const a0  = trailStart + t0 * TRAIL_DEG * Math.PI / 180;
+          const a1  = trailStart + t1 * TRAIL_DEG * Math.PI / 180;
+          const alpha = 0.18 * (s / STEPS) * (s / STEPS);
+          ctx.beginPath();
+          ctx.moveTo(CX, CY);
+          ctx.arc(CX, CY, MAX_R, a0, a1);
+          ctx.closePath();
+          ctx.fillStyle = `rgba(0,255,65,${alpha.toFixed(3)})`;
+          ctx.fill();
+        }
+        ctx.restore();
+
+        // ── Sweep line ───────────────────────────────────
+        ctx.save();
+        ctx.strokeStyle = '#00ff41';
+        ctx.lineWidth   = 2;
+        ctx.shadowColor = '#00ff41';
+        ctx.shadowBlur  = 8;
+        ctx.beginPath();
+        ctx.moveTo(CX, CY);
+        ctx.lineTo(
+          CX + Math.cos(sweepRad) * MAX_R,
+          CY + Math.sin(sweepRad) * MAX_R
+        );
+        ctx.stroke();
+        ctx.restore();
+
+        // ── Skill dots + ripples ─────────────────────────
+        for (const s of SKILLS) {
+          // Ripple rings
+          for (const rp of s.ripples) {
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, rp.r, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(0,255,65,${(rp.a * 0.7).toFixed(3)})`;
+            ctx.lineWidth   = 1.5;
+            ctx.stroke();
+          }
+
+          // Afterglow dot (always dim green)
+          const baseAlpha = 0.45 + s.ping * 0.55;
+          const dotR      = 3 + s.ping * 4;
+
+          if (s.ping > 0.01) {
+            // Glow halo when pinged
+            const grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, dotR * 5);
+            grd.addColorStop(0,   `rgba(0,255,65,${(s.ping * 0.9).toFixed(3)})`);
+            grd.addColorStop(1,   'rgba(0,255,65,0)');
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, dotR * 5, 0, Math.PI * 2);
+            ctx.fillStyle = grd;
+            ctx.fill();
+          }
+
+          // Core dot
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, dotR, 0, Math.PI * 2);
+          ctx.fillStyle = s === hoveredSkill
+            ? '#ffffff'
+            : `rgba(0,255,65,${baseAlpha.toFixed(3)})`;
+          ctx.shadowColor = '#00ff41';
+          ctx.shadowBlur  = s.ping > 0.1 ? 12 : 4;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+
+        // ── Center dot ───────────────────────────────────
+        ctx.beginPath();
+        ctx.arc(CX, CY, 3, 0, Math.PI * 2);
+        ctx.fillStyle = '#00ff41';
+        ctx.fill();
+
+        requestAnimationFrame(draw);
+      }
+
+      requestAnimationFrame(draw);
     })();
   </script>
 </body>
