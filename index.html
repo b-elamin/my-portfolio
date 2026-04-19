@@ -140,8 +140,10 @@
     .hero-content {
       position: relative;
       z-index: 1;
-      text-align: center;
-      max-width: 800px;
+      text-align: left;
+      padding-left: 4rem;
+      padding-right: 2rem;
+      max-width: 100%;
     }
 
     .hero-tag {
@@ -159,14 +161,13 @@
     }
 
     .hero-title {
-      font-size: clamp(2.8rem, 7vw, 5.5rem);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -1.5px;
-      margin-bottom: 1.25rem;
+      font-size: clamp(3.5rem, 13vw, 11rem);
+      font-weight: 900;
+      line-height: 0.92;
+      letter-spacing: -4px;
+      margin-bottom: 1.5rem;
       position: relative;
       transition: filter 0.15s ease;
-      /* Holographic foil */
       --mx: 50%;
       --my: 50%;
       --hue: 200;
@@ -174,7 +175,8 @@
         conic-gradient(
           from calc(var(--hue) * 1deg) at var(--mx) var(--my),
           hsl(0   100% 72%), hsl(60  100% 72%), hsl(120 100% 72%),
-          hsl(180 100% 72%), hsl(240 100% 72%), hsl(300 100% 72%), hsl(360 100% 72%)
+          hsl(180 100% 72%), hsl(240 100% 72%), hsl(300 100% 72%), 
+          hsl(360 100% 72%)
         ),
         linear-gradient(
           calc(var(--hue) * 1deg),
@@ -186,9 +188,18 @@
       background-clip: text;
       color: transparent;
       -webkit-text-fill-color: transparent;
-      text-shadow:
-        0 0 18px hsl(calc(var(--hue) + 180) 100% 65% / 0.38),
-        0 0 42px hsl(calc(var(--hue) + 180) 100% 55% / 0.18);
+      text-shadow: none;
+      word-break: break-word;
+      max-width: 100%;
+    }
+
+    .hero-title::after {
+      content: '';
+      display: block;
+      width: clamp(60px, 8vw, 120px);
+      height: 3px;
+      background: #39d353;
+      margin-top: 1.2rem;
     }
 
     .hero-title:hover {
@@ -290,7 +301,7 @@
     .hero-stats {
       display: flex;
       gap: 1rem;
-      justify-content: center;
+      justify-content: flex-start;
       flex-wrap: wrap;
       margin-bottom: 2.5rem;
     }
@@ -306,7 +317,7 @@
       display: inline-flex;
       gap: 1rem;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-start;
     }
 
     .btn {
