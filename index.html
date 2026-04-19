@@ -2212,26 +2212,29 @@
 
       // ── Skill data ───────────────────────────────────
       // category angles (degrees from top, clockwise):
-      //   Frontend   0-90, Backend 90-180, Creative 180-270, Tools 270-360
+      //   Mobile & Frontend 0-80, Backend 90-170, Databases & Other 190-260, Tools & Learning 275-355
       // proficiency 0-1 maps to radial distance fraction
       const SKILLS = [
-        // Frontend  (0° - 80°)
-        { name: 'JavaScript',    cat: 10,  prof: 0.95 },
-        { name: 'TypeScript',    cat: 30,  prof: 0.90 },
-        { name: 'React',         cat: 52,  prof: 0.88 },
-        { name: 'CSS Animation', cat: 72,  prof: 0.85 },
+        // Mobile & Frontend  (0° - 80°)
+        { name: 'JavaScript',    cat: 10,  prof: 0.82 },
+        { name: 'HTML / CSS',    cat: 28,  prof: 0.85 },
+        { name: 'Bootstrap 5',   cat: 48,  prof: 0.80 },
+        { name: 'Kotlin Android',cat: 68,  prof: 0.78 },
         // Backend  (90° - 170°)
-        { name: 'Node.js',       cat: 100, prof: 0.88 },
-        { name: 'Python',        cat: 130, prof: 0.80 },
-        { name: 'REST / GraphQL',cat: 158, prof: 0.78 },
-        // Creative  (190° - 260°)
-        { name: 'WebGL',         cat: 198, prof: 0.75 },
-        { name: 'Canvas API',    cat: 222, prof: 0.92 },
-        { name: 'SVG',           cat: 248, prof: 0.87 },
-        // Tools  (275° - 355°)
-        { name: 'Git / CI',      cat: 285, prof: 0.83 },
-        { name: 'Docker',        cat: 312, prof: 0.72 },
-        { name: 'Figma / Design',cat: 340, prof: 0.80 },
+        { name: 'Java',          cat: 95,  prof: 0.90 },
+        { name: 'Spring Boot',   cat: 115, prof: 0.88 },
+        { name: 'REST APIs',     cat: 140, prof: 0.85 },
+        { name: 'Spring Security',cat: 162, prof: 0.82 },
+        // Databases & Other  (190° - 260°)
+        { name: 'PostgreSQL',    cat: 195, prof: 0.82 },
+        { name: 'MySQL',         cat: 218, prof: 0.80 },
+        { name: 'Python',        cat: 240, prof: 0.72 },
+        { name: 'PHP',           cat: 258, prof: 0.70 },
+        // Tools & Learning  (275° - 355°)
+        { name: 'Git / GitHub',  cat: 282, prof: 0.88 },
+        { name: 'Postman',       cat: 305, prof: 0.82 },
+        { name: 'Docker',        cat: 328, prof: 0.60 },
+        { name: 'IntelliJ IDEA', cat: 348, prof: 0.85 },
       ];
 
       // Convert polar (angle deg from top CW, radius fraction) → canvas XY
