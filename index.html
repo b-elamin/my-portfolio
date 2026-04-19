@@ -14,6 +14,7 @@
   <meta name="twitter:title" content="Bilal EL AMIN — Full Stack Developer" />
   <meta name="twitter:description" content="Full Stack Developer Student from Fès, Morocco. Java · Spring Boot · Kotlin · PHP · MySQL." />
   <meta name="twitter:image" content="https://b-elamin.github.io/my-portfolio/photo.jpeg" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ctext%20y%3D%27.9em%27%20font-size%3D%2790%27%3E%F0%9F%92%BB%3C%2Ftext%3E%3C%2Fsvg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@700&display=swap" rel="stylesheet" />
@@ -184,18 +185,7 @@
       max-width: 100%;
     }
 
-    .hero-tag {
-      display: inline-block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--accent);
-      border: 1px solid rgba(57,211,83,0.2);
-      padding: 0.35rem 1rem;
-      border-radius: 999px;
-      margin-bottom: 1.5rem;
-      background: rgba(57,211,83,0.08);
+    .hero-title {
       font-size: clamp(3.5rem, 13vw, 11rem);
       font-weight: 900;
       line-height: 0.92;
@@ -387,6 +377,28 @@
 
     .btn-outline:hover {
       background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-download {
+      border: 1px solid rgba(57, 211, 83, 0.5);
+      color: #39d353;
+      background: rgba(57, 211, 83, 0.06);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .btn-download:hover {
+      background: rgba(57, 211, 83, 0.14);
+      border-color: rgba(57, 211, 83, 0.8);
+      box-shadow: 0 0 18px rgba(57, 211, 83, 0.25);
+    }
+
+    .btn-download svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      flex-shrink: 0;
     }
 
     /* Scroll hint */
@@ -711,6 +723,26 @@
     .avatar-blob svg {
       width: 100%;
       height: 100%;
+    }
+
+    .avatar {
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      margin: 0 auto 1rem;
+      overflow: hidden;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .avatar img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center top;
     }
 
     /* ── Projects Section ── */
@@ -1685,14 +1717,13 @@
         <img src="photo.jpeg" alt="Bilal EL AMIN" class="hero-photo-img" loading="lazy" decoding="async">
         <div class="hero-photo-glow"></div>
       </div>
-      <div class="hero-tag">✦ Available for work</div>
       <h1 class="hero-title">Bilal EL AMIN</h1>
       <p class="hero-sub">Full Stack Developer Student · Fès, Morocco 🇲🇦</p>
       <p class="hero-tagline">"I don't wait until I'm ready. I build my way into being ready."</p>
       <div class="hero-stats">
         <span>4+ languages</span>
         <span>·</span>
-        <span>3 real projects</span>
+        <span>4 real projects</span>
         <span>·</span>
         <span>3 spoken languages</span>
       </div>
@@ -1700,7 +1731,12 @@
         <a href="#projects" class="btn btn-primary">view projects</a>
         <a href="#contact" class="btn btn-outline">get in touch</a>
         <a href="https://github.com/belamiin" class="btn btn-outline" target="_blank" rel="noopener">github ↗</a>
-        <a href="bilal-elamin-cv.pdf" download class="btn btn-outline">download cv ↓</a>
+        <a href="bilal-elamin-cv.pdf" download class="btn btn-download" title="Download my CV as PDF">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3v13M8 12l4 4 4-4M5 20h14"/>
+          </svg>
+          download cv
+        </a>
       </div>
     </div>
 
@@ -1810,6 +1846,12 @@
           <div class="tl-title">BTS Développement des Applications Informatiques (DAI)</div>
           <div class="tl-place">Lycée Technique, Fès, Morocco</div>
           <div class="tl-desc">2-year advanced technician program covering full-stack development, databases, mobile applications, and software engineering fundamentals.</div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-date">2025</div>
+          <div class="tl-title">Mobile Wallet — FinTech Android App</div>
+          <div class="tl-place">Individual Project</div>
+          <div class="tl-desc">Built a Kotlin Android fintech UI with Jetpack Compose featuring send/receive payment flows, animated transaction history, and Material 3 design.</div>
         </div>
         <div class="tl-item reveal">
           <div class="tl-date">2024</div>
@@ -1947,11 +1989,45 @@
           </div>
         </div>
 
+        <div class="card-scene reveal">
+          <div class="card-inner">
+            <div class="card-front">
+              <pre class="card-ascii">┌──────────────────┐
+│ 💳 Mobile Wallet │
+│ ╭──────────────╮ │
+│ │ ▶ send / pay │ │
+│ │ ▶ history    │ │
+│ ╰──────────────╯ │
+└──────────────────┘</pre>
+              <h3 class="card-front-title">Mobile Wallet</h3>
+              <span class="card-front-hint">hover to explore →</span>
+            </div>
+            <div class="card-back">
+              <h3 class="card-back-title">Mobile Wallet — FinTech UI</h3>
+              <p class="project-desc">Kotlin Android fintech app with Jetpack Compose: send/receive flows, transaction history, and a clean Material 3 design.</p>
+              <div class="project-tags">
+                <span class="project-tag">Kotlin</span>
+                <span class="project-tag">Jetpack Compose</span>
+                <span class="project-tag">Material 3</span>
+                <span class="project-tag">Android</span>
+              </div>
+              <div class="card-links">
+                <a href="https://github.com/belamiin" target="_blank" rel="noopener" class="card-link-btn">GitHub ↗</a>
+              </div>
+              <div class="card-stats">
+                <p class="stats-label">Highlights</p>
+                <div class="stat-row"><span class="stat-name">UI</span><div class="stat-track"><div class="stat-fill" style="--pct:92%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Compose</span><div class="stat-track"><div class="stat-fill" style="--pct:85%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">State</span><div class="stat-track"><div class="stat-fill" style="--pct:80%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Anim</span><div class="stat-track"><div class="stat-fill" style="--pct:75%"></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
-
-  <!-- GitHub Stats -->
   <section id="github-stats">
     <div class="github-stats-inner">
       <p class="section-label reveal">// github</p>
@@ -1959,7 +2035,7 @@
 
       <div class="stat-cards-grid">
         <div class="gh-stat-card reveal">
-          <div class="gh-stat-value" id="gh-repos">3+</div>
+          <div class="gh-stat-value" id="gh-repos">4+</div>
           <div class="gh-stat-label">Repositories</div>
         </div>
         <div class="gh-stat-card reveal">
@@ -1968,7 +2044,7 @@
         </div>
         <div class="gh-stat-card reveal">
           <div class="gh-stat-value">2026</div>
-          <div class="gh-stat-label">Active Since</div>
+          <div class="gh-stat-label">Graduating</div>
         </div>
         <div class="gh-stat-card reveal">
           <div class="gh-stat-value">Java</div>
@@ -1986,7 +2062,7 @@
         <div class="term-body">
           <div><span class="term-green">a4f2c1e</span> <span style="color:rgba(255,255,255,0.75)">feat(smarttrip): integrate AI recommendation engine for tourist routes</span></div>
           <div><span class="term-green">b7d8e3a</span> <span style="color:rgba(255,255,255,0.75)">feat(auth): implement JWT refresh token flow with Spring Security</span></div>
-          <div><span class="term-green">c2a91f5</span> <span style="color:rgba(255,255,255,0.75)">feat(mobile): scaffold Kotlin app with Jetpack Compose navigation</span></div>
+          <div><span class="term-green">c2a91f5</span> <span style="color:rgba(255,255,255,0.75)">feat(mobile-wallet): scaffold Kotlin app with Jetpack Compose navigation</span></div>
           <div><span class="term-green">d56b0c8</span> <span style="color:rgba(255,255,255,0.75)">feat(parc-manager): add QR label generation and asset scan workflow</span></div>
           <div><span class="term-green">e3f7d12</span> <span style="color:rgba(255,255,255,0.75)">feat(student-crud): multi-role auth and PDF export with Bootstrap 5</span></div>
         </div>
@@ -2064,7 +2140,7 @@
       </div>
     </div>
 
-    <form id="contact-form" class="contact-form reveal" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+    <form id="contact-form" class="contact-form reveal" action="mailto:elaminbillal@gmail.com">
       <input type="text" name="name" placeholder="Your name" required autocomplete="name" />
       <input type="email" name="email" placeholder="Your email" required autocomplete="email" />
       <textarea name="message" placeholder="Your message…" required></textarea>
@@ -3542,34 +3618,18 @@
     })();
 
     /* ═══════════════════════════════════════════════════
-       CONTACT FORM — Formspree
+       CONTACT FORM — mailto fallback
     ═══════════════════════════════════════════════════ */
     (function () {
       const form   = document.getElementById('contact-form');
       const status = document.getElementById('form-status');
       if (!form || !status) return;
 
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        status.textContent = 'Sending…';
-        status.className   = 'form-status';
-        try {
-          const res = await fetch(form.action, {
-            method: 'POST',
-            body: new FormData(form),
-            headers: { 'Accept': 'application/json' }
-          });
-          if (res.ok) {
-            status.textContent = '✓ Message sent! I\'ll get back to you soon.';
-            status.className   = 'form-status success';
-            form.reset();
-          } else {
-            throw new Error('Server error');
-          }
-        } catch {
-          status.textContent = '✗ Something went wrong. Please email me directly.';
-          status.className   = 'form-status error';
-        }
+      form.addEventListener('submit', (e) => {
+        // mailto forms open the mail client natively; just show a hint
+        status.textContent = '✓ Opening your mail client…';
+        status.className   = 'form-status success';
+        setTimeout(() => { status.textContent = ''; status.className = 'form-status'; }, 4000);
       });
     })();
 
