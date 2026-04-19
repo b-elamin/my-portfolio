@@ -366,50 +366,178 @@
       margin-top: 3rem;
     }
 
-    .project-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.07);
+    /* ── Vignette overlay ── */
+    #vignette {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.88) 100%);
+      pointer-events: none;
+      z-index: 500;
+      opacity: 0;
+    }
+
+    @keyframes vignettePulse {
+      0%   { opacity: 0; }
+      25%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    #vignette.pulse {
+      animation: vignettePulse 0.7s ease forwards;
+    }
+
+    /* ── Flip Card System ── */
+    .card-scene {
+      perspective: 900px;
+      height: 320px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
       border-radius: 16px;
-      padding: 2rem;
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
     }
 
-    .project-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(124, 92, 252, 0.3);
-      box-shadow: 0 8px 40px rgba(124, 92, 252, 0.12);
+    .card-scene:hover .card-inner {
+      transform: rotateY(180deg);
     }
 
-    .project-icon {
-      font-size: 2rem;
-      margin-bottom: 1rem;
+    .card-front,
+    .card-back {
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      padding: 1.75rem;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
-    .project-title {
-      font-size: 1.1rem;
+    .card-front {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+      background: rgba(124, 92, 252, 0.07);
+      border: 1px solid rgba(124, 92, 252, 0.22);
+    }
+
+    /* Front face */
+    .card-ascii {
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.63rem;
+      line-height: 1.4;
+      color: var(--accent);
+      opacity: 0.72;
+      white-space: pre;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .card-front-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-top: 0.75rem;
+    }
+
+    .card-front-hint {
+      font-size: 0.62rem;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+      opacity: 0.5;
+    }
+
+    /* Back face */
+    .card-back-title {
+      font-size: 1rem;
       font-weight: 700;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
     }
 
     .project-desc {
       color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.7;
+      font-size: 0.82rem;
+      line-height: 1.65;
     }
 
     .project-tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 1.25rem;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
     }
 
     .project-tag {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.7rem;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
       border-radius: 4px;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(124, 92, 252, 0.12);
+      border: 1px solid rgba(124, 92, 252, 0.25);
+      color: var(--accent);
+    }
+
+    /* Stats bars */
+    .card-stats {
+      margin-top: auto;
+      padding-top: 0.75rem;
+    }
+
+    .stats-label {
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.45rem;
+    }
+
+    .stat-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-name {
+      width: 3.5rem;
+      font-size: 0.62rem;
       color: var(--muted);
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .stat-track {
+      flex: 1;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .stat-fill {
+      height: 100%;
+      width: var(--pct, 0%);
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 2px;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .card-scene:hover .stat-fill {
+      transform: scaleX(1);
+      transition-delay: 0.42s;
     }
 
     /* ── Contact ── */
@@ -512,6 +640,7 @@
   <!-- Cursor canvas trail -->
   <canvas id="cursor-canvas"></canvas>
   <div id="cursor-dot"></div>
+  <div id="vignette"></div>
 
   <!-- Nav -->
   <nav>
@@ -656,69 +785,195 @@
       <h2 class="section-title reveal">Selected Projects</h2>
       <div class="projects-grid">
 
-        <div class="project-card reveal">
-          <div class="project-icon">🌌</div>
-          <h3 class="project-title">Cosmos Dashboard</h3>
-          <p class="project-desc">Real-time data visualization platform with WebGL-accelerated charts and live streaming analytics.</p>
-          <div class="project-tags">
-            <span class="project-tag">React</span>
-            <span class="project-tag">WebGL</span>
-            <span class="project-tag">D3.js</span>
+        <div class="card-scene reveal">
+          <div class="card-inner">
+            <div class="card-front">
+              <pre class="card-ascii">┌──────────────────┐
+│ ▁▂▄▇█▇▄▂▁▂▄▇▄▂ │
+│ ╔════╗  ╔══════╗ │
+│ ║ ▓▓ ║  ║ ░░░░ ║ │
+│ ╚════╝  ╚══════╝ │
+│    ◉ streaming   │
+└──────────────────┘</pre>
+              <h3 class="card-front-title">Cosmos Dashboard</h3>
+              <span class="card-front-hint">hover to explore →</span>
+            </div>
+            <div class="card-back">
+              <h3 class="card-back-title">Cosmos Dashboard</h3>
+              <p class="project-desc">Real-time data visualization platform with WebGL-accelerated charts and live streaming analytics.</p>
+              <div class="project-tags">
+                <span class="project-tag">React</span>
+                <span class="project-tag">WebGL</span>
+                <span class="project-tag">D3.js</span>
+              </div>
+              <div class="card-stats">
+                <p class="stats-label">GitHub Stats</p>
+                <div class="stat-row"><span class="stat-name">Stars</span><div class="stat-track"><div class="stat-fill" style="--pct:78%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Forks</span><div class="stat-track"><div class="stat-fill" style="--pct:62%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Commits</span><div class="stat-track"><div class="stat-fill" style="--pct:91%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Issues</span><div class="stat-track"><div class="stat-fill" style="--pct:35%"></div></div></div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="project-card reveal">
-          <div class="project-icon">🔮</div>
-          <h3 class="project-title">Aura AI</h3>
-          <p class="project-desc">Generative UI toolkit that transforms natural-language prompts into interactive React components on the fly.</p>
-          <div class="project-tags">
-            <span class="project-tag">TypeScript</span>
-            <span class="project-tag">LLM API</span>
-            <span class="project-tag">Next.js</span>
+        <div class="card-scene reveal">
+          <div class="card-inner">
+            <div class="card-front">
+              <pre class="card-ascii">┌──────────────────┐
+│   ◈  prompt  ◈   │
+│ ╭──────────────╮ │
+│ │ > generate   │ │
+│ │   ⟳ thinking │ │
+│ ╰──────────────╯ │
+└──────────────────┘</pre>
+              <h3 class="card-front-title">Aura AI</h3>
+              <span class="card-front-hint">hover to explore →</span>
+            </div>
+            <div class="card-back">
+              <h3 class="card-back-title">Aura AI</h3>
+              <p class="project-desc">Generative UI toolkit that transforms natural-language prompts into interactive React components on the fly.</p>
+              <div class="project-tags">
+                <span class="project-tag">TypeScript</span>
+                <span class="project-tag">LLM API</span>
+                <span class="project-tag">Next.js</span>
+              </div>
+              <div class="card-stats">
+                <p class="stats-label">GitHub Stats</p>
+                <div class="stat-row"><span class="stat-name">Stars</span><div class="stat-track"><div class="stat-fill" style="--pct:92%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Forks</span><div class="stat-track"><div class="stat-fill" style="--pct:55%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Commits</span><div class="stat-track"><div class="stat-fill" style="--pct:74%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Issues</span><div class="stat-track"><div class="stat-fill" style="--pct:28%"></div></div></div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="project-card reveal">
-          <div class="project-icon">⚡</div>
-          <h3 class="project-title">Flux Engine</h3>
-          <p class="project-desc">Lightweight state-management library with time-travel debugging and automatic memoization.</p>
-          <div class="project-tags">
-            <span class="project-tag">JavaScript</span>
-            <span class="project-tag">Open Source</span>
-            <span class="project-tag">npm</span>
+        <div class="card-scene reveal">
+          <div class="card-inner">
+            <div class="card-front">
+              <pre class="card-ascii">┌──────────────────┐
+│  ○ ──▶ [store]   │
+│  ↑             ↓ │
+│[view]       [act] │
+│  ↑ ─────────── ↓ │
+│     ⏮ travel     │
+└──────────────────┘</pre>
+              <h3 class="card-front-title">Flux Engine</h3>
+              <span class="card-front-hint">hover to explore →</span>
+            </div>
+            <div class="card-back">
+              <h3 class="card-back-title">Flux Engine</h3>
+              <p class="project-desc">Lightweight state-management library with time-travel debugging and automatic memoization.</p>
+              <div class="project-tags">
+                <span class="project-tag">JavaScript</span>
+                <span class="project-tag">Open Source</span>
+                <span class="project-tag">npm</span>
+              </div>
+              <div class="card-stats">
+                <p class="stats-label">GitHub Stats</p>
+                <div class="stat-row"><span class="stat-name">Stars</span><div class="stat-track"><div class="stat-fill" style="--pct:65%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Forks</span><div class="stat-track"><div class="stat-fill" style="--pct:88%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Commits</span><div class="stat-track"><div class="stat-fill" style="--pct:83%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Issues</span><div class="stat-track"><div class="stat-fill" style="--pct:42%"></div></div></div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="project-card reveal">
-          <div class="project-icon">🎨</div>
-          <h3 class="project-title">Palette Studio</h3>
-          <p class="project-desc">Browser-based creative coding environment with live Canvas/WebGL output and shareable sketches.</p>
-          <div class="project-tags">
-            <span class="project-tag">Canvas API</span>
-            <span class="project-tag">GLSL</span>
-            <span class="project-tag">Web Workers</span>
+        <div class="card-scene reveal">
+          <div class="card-inner">
+            <div class="card-front">
+              <pre class="card-ascii">┌──────────────────┐
+│ ╔══════════════╗ │
+│ ║ ▓░▒▓░▒▓░▒▓░ ║ │
+│ ║ ░▒▓░▒▓░▒▓░▒ ║ │
+│ ║ ▒▓░▒▓░▒▓░▒▓ ║ │
+│ ╚══════════════╝ │
+└──────────────────┘</pre>
+              <h3 class="card-front-title">Palette Studio</h3>
+              <span class="card-front-hint">hover to explore →</span>
+            </div>
+            <div class="card-back">
+              <h3 class="card-back-title">Palette Studio</h3>
+              <p class="project-desc">Browser-based creative coding environment with live Canvas/WebGL output and shareable sketches.</p>
+              <div class="project-tags">
+                <span class="project-tag">Canvas API</span>
+                <span class="project-tag">GLSL</span>
+                <span class="project-tag">Web Workers</span>
+              </div>
+              <div class="card-stats">
+                <p class="stats-label">GitHub Stats</p>
+                <div class="stat-row"><span class="stat-name">Stars</span><div class="stat-track"><div class="stat-fill" style="--pct:71%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Forks</span><div class="stat-track"><div class="stat-fill" style="--pct:45%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Commits</span><div class="stat-track"><div class="stat-fill" style="--pct:68%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Issues</span><div class="stat-track"><div class="stat-fill" style="--pct:55%"></div></div></div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="project-card reveal">
-          <div class="project-icon">🛸</div>
-          <h3 class="project-title">Orbit CMS</h3>
-          <p class="project-desc">Headless content platform with visual field builder, multi-environment workflows, and edge-cached delivery.</p>
-          <div class="project-tags">
-            <span class="project-tag">Node.js</span>
-            <span class="project-tag">GraphQL</span>
-            <span class="project-tag">PostgreSQL</span>
+        <div class="card-scene reveal">
+          <div class="card-inner">
+            <div class="card-front">
+              <pre class="card-ascii">┌──────────────────┐
+│ ◯ content        │
+│ ├─ ◉ posts       │
+│ ├─ ◉ media       │
+│ └─ ◉ api ──────▶ │
+│      cdn / edge  │
+└──────────────────┘</pre>
+              <h3 class="card-front-title">Orbit CMS</h3>
+              <span class="card-front-hint">hover to explore →</span>
+            </div>
+            <div class="card-back">
+              <h3 class="card-back-title">Orbit CMS</h3>
+              <p class="project-desc">Headless content platform with visual field builder, multi-environment workflows, and edge-cached delivery.</p>
+              <div class="project-tags">
+                <span class="project-tag">Node.js</span>
+                <span class="project-tag">GraphQL</span>
+                <span class="project-tag">PostgreSQL</span>
+              </div>
+              <div class="card-stats">
+                <p class="stats-label">GitHub Stats</p>
+                <div class="stat-row"><span class="stat-name">Stars</span><div class="stat-track"><div class="stat-fill" style="--pct:58%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Forks</span><div class="stat-track"><div class="stat-fill" style="--pct:72%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Commits</span><div class="stat-track"><div class="stat-fill" style="--pct:79%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Issues</span><div class="stat-track"><div class="stat-fill" style="--pct:38%"></div></div></div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="project-card reveal">
-          <div class="project-icon">🎵</div>
-          <h3 class="project-title">Waveform</h3>
-          <p class="project-desc">Collaborative music production tool with Web Audio API synthesis and real-time multi-user editing.</p>
-          <div class="project-tags">
-            <span class="project-tag">Web Audio API</span>
-            <span class="project-tag">WebSockets</span>
-            <span class="project-tag">Rust/WASM</span>
+        <div class="card-scene reveal">
+          <div class="card-inner">
+            <div class="card-front">
+              <pre class="card-ascii">┌──────────────────┐
+│ ▁▂▄▇█▇▄▂▁▂▄▇█▇▄ │
+│ ▂▄▇█▇▄▂▁▂▄▇█▇▄▂ │
+│ ──────────────── │
+│ ▶  00:04:32      │
+│ ≋  realtime  ≋   │
+└──────────────────┘</pre>
+              <h3 class="card-front-title">Waveform</h3>
+              <span class="card-front-hint">hover to explore →</span>
+            </div>
+            <div class="card-back">
+              <h3 class="card-back-title">Waveform</h3>
+              <p class="project-desc">Collaborative music production tool with Web Audio API synthesis and real-time multi-user editing.</p>
+              <div class="project-tags">
+                <span class="project-tag">Web Audio API</span>
+                <span class="project-tag">WebSockets</span>
+                <span class="project-tag">Rust/WASM</span>
+              </div>
+              <div class="card-stats">
+                <p class="stats-label">GitHub Stats</p>
+                <div class="stat-row"><span class="stat-name">Stars</span><div class="stat-track"><div class="stat-fill" style="--pct:84%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Forks</span><div class="stat-track"><div class="stat-fill" style="--pct:61%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Commits</span><div class="stat-track"><div class="stat-fill" style="--pct:87%"></div></div></div>
+                <div class="stat-row"><span class="stat-name">Issues</span><div class="stat-track"><div class="stat-fill" style="--pct:22%"></div></div></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1005,6 +1260,23 @@
         timerId = null;
         arcEls.forEach(el => el.remove());
         arcEls = [];
+      });
+    })();
+
+    /* ═══════════════════════════════════════════════════
+       FLIP CARD VIGNETTE — pulse on each card hover
+    ═══════════════════════════════════════════════════ */
+    (function () {
+      const vignette = document.getElementById('vignette');
+      if (!vignette) return;
+
+      document.querySelectorAll('.card-scene').forEach((scene) => {
+        scene.addEventListener('mouseenter', () => {
+          // Remove class, force reflow, then re-add to restart animation
+          vignette.classList.remove('pulse');
+          void vignette.offsetWidth;
+          vignette.classList.add('pulse');
+        });
       });
     })();
 
