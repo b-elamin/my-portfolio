@@ -401,6 +401,63 @@
       font-size: 1.05rem;
     }
 
+    /* Terminal card */
+    .term-card {
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(57, 211, 83, 0.25);
+      border-radius: 10px;
+      overflow: hidden;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.82rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .term-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.5rem 0.85rem;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(57, 211, 83, 0.15);
+    }
+
+    .term-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+
+    .term-dot.r { background: #ff5f57; }
+    .term-dot.y { background: #febc2e; }
+    .term-dot.g { background: #28c840; }
+
+    .term-filename {
+      margin-left: 6px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .term-body {
+      padding: 1rem 1.2rem;
+      line-height: 1.75;
+    }
+
+    .term-key   { color: #7c9cf7; }
+    .term-colon { color: rgba(255,255,255,0.3); margin: 0 2px; }
+    .term-str   { color: #f9c07a; }
+    .term-green { color: #39d353; }
+    .term-comment { color: rgba(255,255,255,0.28); font-style: italic; }
+
+    .about-philosophy {
+      border-left: 2px solid #39d353;
+      padding-left: 1rem;
+      color: var(--muted);
+      font-size: 0.97rem;
+      line-height: 1.7;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+
     .skills-list {
       display: none;
     }
@@ -992,12 +1049,34 @@
     <div class="about-grid">
       <div class="about-text reveal">
         <p class="section-label">About Me</p>
-        <h2 class="section-title">Hello, I'm a developer who loves creating</h2>
-        <p>I specialize in building pixel-perfect UIs and scalable APIs. With a deep
-        passion for animation and interaction design, I turn ideas into immersive web
-        experiences.</p>
-        <p>When I'm not writing code you'll find me exploring generative art,
-        open-source tooling, and the intersection of design and engineering.</p>
+        <h2 class="section-title">Hello, I'm Bilal EL AMIN</h2>
+
+        <div class="term-card">
+          <div class="term-titlebar">
+            <span class="term-dot r"></span>
+            <span class="term-dot y"></span>
+            <span class="term-dot g"></span>
+            <span class="term-filename">bilal.json</span>
+          </div>
+          <div class="term-body">
+            <div><span class="term-key">name</span><span class="term-colon">:</span> <span class="term-str">"Bilal EL AMIN"</span></div>
+            <div><span class="term-key">role</span><span class="term-colon">:</span> <span class="term-str">"Full Stack Dev Student"</span></div>
+            <div><span class="term-key">location</span><span class="term-colon">:</span> <span class="term-str">"Fès, Morocco 🇲🇦"</span></div>
+            <div><span class="term-key">school</span><span class="term-colon">:</span> <span class="term-str">"Lycée Technique, Fès"</span></div>
+            <div><span class="term-key">degree</span><span class="term-colon">:</span> <span class="term-str">"BTS DAI 2024–2026"</span></div>
+            <div style="margin-top:0.5rem"><span class="term-comment">// spoken languages</span></div>
+            <div><span class="term-key">arabic</span><span class="term-colon">:</span> <span class="term-green">"native"</span></div>
+            <div><span class="term-key">english</span><span class="term-colon">:</span> <span class="term-green">"fluent"</span></div>
+            <div><span class="term-key">french</span><span class="term-colon">:</span> <span class="term-green">"conversational"</span></div>
+          </div>
+        </div>
+
+        <blockquote class="about-philosophy">
+          I am not a specialist. Not yet. And that's exactly the point.<br/>
+          While others pick a lane, I learn both sides of the stack.<br/>
+          The most dangerous developer is not the most experienced — it's the hungriest one.
+        </blockquote>
+
         <div id="radar-wrap">
           <canvas id="radar-canvas" width="360" height="360"></canvas>
         </div>
