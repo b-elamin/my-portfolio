@@ -585,6 +585,34 @@
       line-height: 1.75;
     }
 
+    /* ── Typewriter animation for bilal.json card ── */
+    .term-type > div {
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+    .term-type > div.term-line-visible {
+      opacity: 1;
+      transform: none;
+    }
+    .term-type::after {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 1em;
+      background: #39d353;
+      vertical-align: text-bottom;
+      margin-left: 2px;
+      opacity: 0;
+      animation: term-blink 0.8s step-start infinite;
+    }
+    .term-type.term-typing::after { opacity: 1; }
+    .term-type.term-done::after   { opacity: 0; }
+    @keyframes term-blink {
+      50% { opacity: 0; }
+      0%, 100% { opacity: 1; }
+    }
+
     .term-key   { color: #7c9cf7; }
     .term-colon { color: rgba(255,255,255,0.3); margin: 0 2px; }
     .term-str   { color: #f9c07a; }
@@ -1571,7 +1599,7 @@
             <span class="term-dot g"></span>
             <span class="term-filename">bilal.json</span>
           </div>
-          <div class="term-body">
+          <div class="term-body term-type">
             <div><span class="term-key">name</span><span class="term-colon">:</span> <span class="term-str">"Bilal EL AMIN"</span></div>
             <div><span class="term-key">role</span><span class="term-colon">:</span> <span class="term-str">"Full Stack Dev Student"</span></div>
             <div><span class="term-key">location</span><span class="term-colon">:</span> <span class="term-str">"Fès, Morocco 🇲🇦"</span></div>
@@ -2696,6 +2724,44 @@
         });
       }, { threshold: 0.15 });
       els.forEach((el) => io.observe(el));
+    })();
+
+    /* ═══════════════════════════════════════════════════
+       TYPEWRITER — bilal.json term card
+       Reveals each row one-by-one when card scrolls into view.
+    ═══════════════════════════════════════════════════ */
+    (function () {
+      const termBody = document.querySelector('.term-type');
+      if (!termBody) return;
+      const rows = Array.from(termBody.children);
+      let started = false;
+
+      function runTypewriter() {
+        if (started) return;
+        started = true;
+        termBody.classList.add('term-typing');
+        rows.forEach(function (row, i) {
+          setTimeout(function () {
+            row.classList.add('term-line-visible');
+            if (i === rows.length - 1) {
+              setTimeout(function () {
+                termBody.classList.remove('term-typing');
+                termBody.classList.add('term-done');
+              }, 400);
+            }
+          }, i * 160);
+        });
+      }
+
+      const io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            runTypewriter();
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      io.observe(termBody);
     })();
 
     /* ═══════════════════════════════════════════════════
