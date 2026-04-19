@@ -173,6 +173,29 @@
       margin-bottom: 1.25rem;
       position: relative;
       transition: filter 0.15s ease;
+      /* Holographic foil */
+      --mx: 50%;
+      --my: 50%;
+      --hue: 200;
+      background:
+        conic-gradient(
+          from calc(var(--hue) * 1deg) at var(--mx) var(--my),
+          hsl(0   100% 72%), hsl(60  100% 72%), hsl(120 100% 72%),
+          hsl(180 100% 72%), hsl(240 100% 72%), hsl(300 100% 72%), hsl(360 100% 72%)
+        ),
+        linear-gradient(
+          calc(var(--hue) * 1deg),
+          hsl(calc(var(--hue))       100% 88%),
+          hsl(calc(var(--hue) + 120) 100% 78%),
+          hsl(calc(var(--hue) + 240) 100% 88%)
+        );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      text-shadow:
+        0 0 18px hsl(calc(var(--hue) + 180) 100% 65% / 0.38),
+        0 0 42px hsl(calc(var(--hue) + 180) 100% 55% / 0.18);
     }
 
     .hero-title:hover {
@@ -191,10 +214,22 @@
     }
 
     .hero-title .line-accent {
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      /* Inherit holographic treatment from .hero-title */
+      background:
+        conic-gradient(
+          from calc(var(--hue) * 1deg) at var(--mx) var(--my),
+          hsl(0   100% 72%), hsl(60  100% 72%), hsl(120 100% 72%),
+          hsl(180 100% 72%), hsl(240 100% 72%), hsl(300 100% 72%), hsl(360 100% 72%)
+        ),
+        linear-gradient(
+          calc(var(--hue) * 1deg),
+          hsl(calc(var(--hue))       100% 88%),
+          hsl(calc(var(--hue) + 120) 100% 78%),
+          hsl(calc(var(--hue) + 240) 100% 88%)
+        );
       -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
       background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .hero-sub {
@@ -1098,7 +1133,7 @@
 
   <script>
     /* ═══════════════════════════════════════════════════
-       CURSOR TRAIL — Canvas particle system
+       CURSOR TRAIL + FIREWORKS — Shared canvas (pointer-events:none, z-index 9999)
     ═══════════════════════════════════════════════════ */
     (function () {
       const canvas = document.getElementById('cursor-canvas');
@@ -1113,10 +1148,8 @@
       resize();
       window.addEventListener('resize', resize);
 
-      // Particle pool
+      // ── Cursor trail particles ─────────────────────────
       const particles = [];
-
-      // Hue cycles continuously across the colour wheel
       let hue = 0;
 
       class Particle {
@@ -1184,17 +1217,89 @@
         // Throttle by distance to avoid too-dense clusters on slow moves
         const dx = mx - lastX;
         const dy = my - lastY;
-        if (dx * dx + dy * dy > 4) {   // spawn when movement exceeds 2px (squared distance > 4)
+        if (dx * dx + dy * dy > 4) {   // spawn when movement is greater than 2px
           particles.push(new Particle(mx, my));
           lastX = mx;
           lastY = my;
         }
       });
 
-      // Render loop
+      // ── Fireworks ──────────────────────────────────────
+      const fireworks = [];
+
+      class FWParticle {
+        constructor(x, y, angle, speed, burstHue, isSpark) {
+          this.x       = x;
+          this.y       = y;
+          this.vx      = Math.cos(angle) * speed;
+          this.vy      = Math.sin(angle) * speed;
+          this.hue     = burstHue;
+          this.born    = performance.now();
+          this.life    = isSpark ? 600 : 1500;
+          this.opacity = 1;
+          this.isSpark = isSpark;
+          this.trail   = [];   // up to 5 past positions
+          this.spawned = false; // have secondary sparkles been emitted?
+        }
+
+        update(now) {
+          const age    = now - this.born;
+          this.opacity = Math.max(0, 1 - age / this.life);
+
+          // Record trail before moving
+          this.trail.push({ x: this.x, y: this.y });
+          if (this.trail.length > 5) this.trail.shift();
+
+          // Gravity
+          this.vy += 0.12;
+          this.x  += this.vx;
+          this.y  += this.vy;
+        }
+
+        draw() {
+          if (this.opacity <= 0) return;
+          const r = this.isSpark ? 1.5 : 2.5;
+
+          // Trail — 5 ghost positions at decreasing opacity
+          for (let i = 0; i < this.trail.length; i++) {
+            const t = (i + 1) / this.trail.length; // 0 → 1 (oldest → newest)
+            ctx.beginPath();
+            ctx.arc(this.trail[i].x, this.trail[i].y, r * t, 0, Math.PI * 2);
+            ctx.fillStyle = `hsla(${this.hue}, 100%, 70%, ${this.opacity * t * 0.5})`;
+            ctx.fill();
+          }
+
+          // Core
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, r, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${this.hue}, 100%, 80%, ${this.opacity})`;
+          ctx.fill();
+        }
+
+        get isDead() { return this.opacity <= 0; }
+
+        // Trigger secondary sparkles exactly once when opacity drops below 20%
+        get shouldSpawnSparks() {
+          return !this.isSpark && !this.spawned && this.opacity < 0.2;
+        }
+      }
+
+      // Click → firework burst
+      document.addEventListener('click', (e) => {
+        const burstHue = Math.random() * 360;
+        for (let i = 0; i < 40; i++) {
+          const baseAngle = (i / 40) * Math.PI * 2;
+          const spread    = (Math.random() - 0.5) * (Math.PI / 12); // ±15°
+          const speed     = 3 + Math.random() * 5;                  // 3–8 px/frame
+          fireworks.push(new FWParticle(e.clientX, e.clientY, baseAngle + spread, speed, burstHue, false));
+        }
+      });
+
+      // ── Shared render loop ─────────────────────────────
       function loop(now) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        // Cursor trail
         for (let i = particles.length - 1; i >= 0; i--) {
           const p = particles[i];
           if (p.isDead) {
@@ -1205,9 +1310,45 @@
           }
         }
 
+        // Fireworks
+        for (let i = fireworks.length - 1; i >= 0; i--) {
+          const fw = fireworks[i];
+          if (fw.isDead) {
+            fireworks.splice(i, 1);
+            continue;
+          }
+          // Spawn secondary sparkles when nearly dead
+          if (fw.shouldSpawnSparks) {
+            fw.spawned = true;
+            for (let s = 0; s < 3; s++) {
+              const a  = Math.random() * Math.PI * 2;
+              const sp = 1 + Math.random() * 3;
+              fireworks.push(new FWParticle(fw.x, fw.y, a, sp, fw.hue, true));
+            }
+          }
+          fw.update(now);
+          fw.draw();
+        }
+
         requestAnimationFrame(loop);
       }
       requestAnimationFrame(loop);
+    })();
+
+    /* ═══════════════════════════════════════════════════
+       HOLOGRAPHIC FOIL — mousemove shifts gradient on hero title
+    ═══════════════════════════════════════════════════ */
+    (function () {
+      const title = document.querySelector('.hero-title');
+      if (!title) return;
+      window.addEventListener('mousemove', (e) => {
+        const hue = (e.clientX / window.innerWidth * 360).toFixed(1);
+        const mx  = (e.clientX / window.innerWidth  * 100).toFixed(1) + '%';
+        const my  = (e.clientY / window.innerHeight * 100).toFixed(1) + '%';
+        title.style.setProperty('--hue', hue);
+        title.style.setProperty('--mx',  mx);
+        title.style.setProperty('--my',  my);
+      });
     })();
 
     /* ═══════════════════════════════════════════════════
