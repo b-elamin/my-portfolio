@@ -516,6 +516,9 @@
       .stat-cards-grid { grid-template-columns: 1fr 1fr; }
       .gh-stat-value { font-size: 1.6rem; }
 
+      #terminal { padding: 4rem 1.25rem; min-height: unset; align-items: flex-start; }
+      .ai-term-output { max-height: 300px; }
+
       #contact {
         padding: 4rem 1.25rem;
         min-height: unset;
@@ -974,6 +977,117 @@
       text-align: center;
     }
 
+    /* ── Interactive Terminal Section ── */
+    #terminal {
+      padding: 7rem 2rem;
+      background: var(--bg);
+    }
+
+    .terminal-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .ai-term-card {
+      background: #0d0d14;
+      border: 1px solid rgba(57, 211, 83, 0.3);
+      border-radius: 12px;
+      overflow: hidden;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.84rem;
+      margin-top: 2.5rem;
+      box-shadow: 0 0 40px rgba(57, 211, 83, 0.06);
+    }
+
+    .ai-term-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.55rem 1rem;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(57, 211, 83, 0.15);
+    }
+
+    .ai-term-titlebar .term-filename {
+      flex: 1;
+      text-align: center;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.04em;
+    }
+
+    .ai-term-output {
+      padding: 1.1rem 1.3rem 0.5rem;
+      min-height: 280px;
+      max-height: 420px;
+      overflow-y: auto;
+      line-height: 1.8;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(57,211,83,0.2) transparent;
+    }
+
+    .ai-term-output::-webkit-scrollbar { width: 4px; }
+    .ai-term-output::-webkit-scrollbar-thumb {
+      background: rgba(57,211,83,0.2);
+      border-radius: 2px;
+    }
+
+    .ai-line { display: block; word-break: break-word; }
+    .ai-line.prompt  { color: #39d353; }
+    .ai-line.answer  { color: rgba(255,255,255,0.82); }
+    .ai-line.user-in { color: #7c9cf7; }
+    .ai-line.err     { color: #f97b7b; }
+    .ai-line.blank   { display: block; height: 0.5rem; }
+
+    .ai-cursor {
+      display: inline-block;
+      width: 7px;
+      height: 1em;
+      background: #39d353;
+      vertical-align: text-bottom;
+      animation: ai-blink 0.75s step-start infinite;
+    }
+    @keyframes ai-blink { 50% { opacity: 0; } }
+
+    .ai-term-inputrow {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.3rem 0.85rem;
+      border-top: 1px solid rgba(57, 211, 83, 0.12);
+    }
+
+    .ai-term-prompt-label {
+      color: #39d353;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.84rem;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .ai-term-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #7c9cf7;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.84rem;
+      caret-color: #39d353;
+    }
+
+    .ai-term-input::placeholder {
+      color: rgba(255,255,255,0.2);
+    }
+
+    .ai-term-hint {
+      margin-top: 0.9rem;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.74rem;
+      color: rgba(255,255,255,0.22);
+      text-align: center;
+    }
+
     #contact .section-title {
       margin-bottom: 1rem;
     }
@@ -1170,7 +1284,7 @@
     .tech-svg { width: 100%; height: auto;
       filter: drop-shadow(0 0 18px rgba(57,211,83,0.12)); }
 
-    #hero, #about, #journey, #projects, #github-stats, #contact {
+    #hero, #about, #journey, #projects, #github-stats, #terminal, #contact {
       scroll-margin-top: 64px;
     }
 
@@ -1210,6 +1324,17 @@
     }
 
     #github-stats .github-stats-inner {
+      width: 100%;
+    }
+
+    #terminal {
+      padding: 5rem 2rem;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+    }
+
+    #terminal .terminal-inner {
       width: 100%;
     }
 
@@ -1504,6 +1629,7 @@
       <li><a href="#journey">Journey</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#github-stats">GitHub</a></li>
+      <li><a href="#terminal">Terminal</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <button class="hamburger" id="hamburger-btn" aria-label="Open menu">
@@ -1516,6 +1642,7 @@
       <a href="#journey">Journey</a>
       <a href="#projects">Projects</a>
       <a href="#github-stats">GitHub</a>
+      <a href="#terminal">Terminal</a>
       <a href="#contact">Contact</a>
     </div>
   </nav>
@@ -1868,6 +1995,39 @@
       <a href="https://github.com/belamiin" target="_blank" rel="noopener" class="gh-profile-link reveal">
         → view full profile on github.com/belamiin
       </a>
+    </div>
+  </section>
+
+  <!-- Interactive AI Terminal -->
+  <section id="terminal">
+    <div class="terminal-inner">
+      <p class="section-label reveal">// terminal</p>
+      <h2 class="section-title reveal">Ask me anything</h2>
+
+      <div class="ai-term-card reveal">
+        <div class="ai-term-titlebar">
+          <span class="term-dot r"></span>
+          <span class="term-dot y"></span>
+          <span class="term-dot g"></span>
+          <span class="term-filename">bilal@portfolio ~ — AI Terminal</span>
+        </div>
+        <div class="ai-term-output" id="ai-output" aria-live="polite" aria-label="Terminal output"></div>
+        <div class="ai-term-inputrow">
+          <span class="ai-term-prompt-label">visitor@portfolio:~$</span>
+          <input
+            class="ai-term-input"
+            id="ai-input"
+            type="text"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="type a command or press Enter to continue…"
+            aria-label="Terminal input"
+          />
+        </div>
+      </div>
+      <p class="ai-term-hint reveal">Try: <code>help</code> · <code>skills</code> · <code>projects</code> · <code>contact</code> · <code>clear</code></p>
     </div>
   </section>
 
@@ -3427,6 +3587,238 @@
       if (dot) dot.style.display = 'none';
       document.body.style.cursor = '';
     })();
+
+    /* ═══════════════════════════════════════════════════
+       INTERACTIVE AI TERMINAL
+    ═══════════════════════════════════════════════════ */
+    (function () {
+      const output  = document.getElementById('ai-output');
+      const input   = document.getElementById('ai-input');
+      if (!output || !input) return;
+
+      /* ── Knowledge base ── */
+      const KB = {
+        help: [
+          'Available commands:',
+          '  skills      — tech stack & tools',
+          '  projects    — selected work',
+          '  education   — background & studies',
+          '  contact     — reach Bilal',
+          '  about       — who am I?',
+          '  languages   — spoken languages',
+          '  goals       — what am I looking for?',
+          '  clear       — clear the terminal',
+          '',
+          'Or just ask me anything in plain English.'
+        ],
+        skills: [
+          'Backend  : Java · Spring Boot · PHP · Node.js',
+          'Frontend : HTML · CSS · JavaScript · Bootstrap',
+          'Mobile   : Kotlin · Jetpack Compose · Android',
+          'Database : MySQL · PostgreSQL · SQLite',
+          'DevOps   : Git · GitHub · Linux · Docker (learning)',
+          'Tools    : VS Code · IntelliJ · Postman · Figma'
+        ],
+        projects: [
+          '1. SmartTrip — AI-powered tourist route planner (Spring Boot + React)',
+          '2. Parc Manager — IT asset tracker with QR labels (PHP + MySQL)',
+          '3. Student CRUD — multi-role auth + PDF export (Bootstrap 5)',
+          '4. Mobile Wallet — Kotlin + Jetpack Compose fintech UI'
+        ],
+        education: [
+          'School  : Lycée Technique, Fès — Morocco',
+          'Degree  : BTS DAI (Développement des Applications Informatiques)',
+          'Years   : 2024 – 2026',
+          'Focus   : Full Stack Development · System Architecture'
+        ],
+        contact: [
+          'Email    : elaminbillal@gmail.com',
+          'GitHub   : github.com/belamiin',
+          'LinkedIn : linkedin.com/in/bilal-el-amin-316905314',
+          'Location : Fès, Morocco 🇲🇦'
+        ],
+        about: [
+          'I\'m Bilal EL AMIN — a Full Stack Developer Student from Fès.',
+          'I build web apps, REST APIs, and mobile experiences.',
+          'Driven by curiosity, I learn both sides of the stack.',
+          '"The most dangerous developer is the hungriest one."'
+        ],
+        languages: [
+          'Arabic   : native',
+          'English  : fluent',
+          'French   : conversational'
+        ],
+        goals: [
+          'Looking for an internship or junior dev role (2025/2026).',
+          'Interested in: backend systems, mobile apps, AI integration.',
+          'Open to remote or on-site opportunities worldwide.'
+        ]
+      };
+
+      /* ── Auto Q&A script ── */
+      const SCRIPT = [
+        { q: 'whoami',    a: KB.about    },
+        { q: 'skills',    a: KB.skills   },
+        { q: 'projects',  a: KB.projects },
+        { q: 'goals',     a: KB.goals    }
+      ];
+
+      /* ── Helpers ── */
+      function appendLine(text, cls) {
+        const el = document.createElement('span');
+        el.className = 'ai-line ' + (cls || 'answer');
+        el.textContent = text;
+        output.appendChild(el);
+        output.scrollTop = output.scrollHeight;
+        return el;
+      }
+
+      function appendBlank() {
+        const el = document.createElement('span');
+        el.className = 'ai-line blank';
+        output.appendChild(el);
+        output.scrollTop = output.scrollHeight;
+      }
+
+      /* Typing cursor attached to the last line */
+      let cursorEl = null;
+      function showCursor() {
+        removeCursor();
+        cursorEl = document.createElement('span');
+        cursorEl.className = 'ai-cursor';
+        output.appendChild(cursorEl);
+        output.scrollTop = output.scrollHeight;
+      }
+      function removeCursor() {
+        if (cursorEl && cursorEl.parentNode) cursorEl.parentNode.removeChild(cursorEl);
+        cursorEl = null;
+      }
+
+      /* Type a single string character by character */
+      function typeString(str, cls, speed, cb) {
+        removeCursor();
+        const el = document.createElement('span');
+        el.className = 'ai-line ' + (cls || 'answer');
+        output.appendChild(el);
+        showCursor();
+        let i = 0;
+        function tick() {
+          if (i < str.length) {
+            el.textContent += str[i++];
+            if (cursorEl) output.appendChild(cursorEl); // keep cursor at end
+            output.scrollTop = output.scrollHeight;
+            setTimeout(tick, speed + (Math.random() * speed * 0.6 | 0));
+          } else {
+            if (cb) cb();
+          }
+        }
+        tick();
+      }
+
+      /* Print an array of answer lines instantly (after a short delay) */
+      function printLines(lines, delay, cb) {
+        let idx = 0;
+        function next() {
+          if (idx >= lines.length) { if (cb) cb(); return; }
+          const line = lines[idx++];
+          appendLine(line, 'answer');
+          setTimeout(next, 28);
+        }
+        setTimeout(next, delay);
+      }
+
+      /* ── Auto-play the Q&A script ── */
+      let scriptIdx = 0;
+      let autoRunning = false;
+      let autoTimer = null;
+      let paused = false; // paused while user is typing
+
+      function runNextScript() {
+        if (paused || scriptIdx >= SCRIPT.length) {
+          autoRunning = false;
+          removeCursor();
+          appendBlank();
+          appendLine('— auto-demo complete. Type a command below. —', 'err');
+          appendBlank();
+          return;
+        }
+        autoRunning = true;
+        const item = SCRIPT[scriptIdx++];
+        appendBlank();
+        typeString('visitor@portfolio:~$ ' + item.q, 'prompt', 38, function () {
+          removeCursor();
+          printLines(item.a, 180, function () {
+            autoTimer = setTimeout(runNextScript, 1400);
+          });
+        });
+      }
+
+      /* ── Intersection observer: start auto-play when section is visible ── */
+      let started = false;
+      const sectionObs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting && !started) {
+            started = true;
+            sectionObs.unobserve(e.target);
+            setTimeout(runNextScript, 600);
+          }
+        });
+      }, { threshold: 0.25 });
+      const termSection = document.getElementById('terminal');
+      if (termSection) sectionObs.observe(termSection);
+
+      /* ── User input handler ── */
+      function handleCommand(raw) {
+        const cmd = raw.trim().toLowerCase();
+        if (!cmd) return;
+
+        /* pause auto-play */
+        paused = true;
+        if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+        removeCursor();
+
+        appendBlank();
+        appendLine('visitor@portfolio:~$ ' + raw.trim(), 'user-in');
+
+        if (cmd === 'clear') {
+          output.innerHTML = '';
+          return;
+        }
+
+        let lines = null;
+        /* exact match */
+        if (KB[cmd]) {
+          lines = KB[cmd];
+        } else {
+          /* fuzzy keyword search */
+          for (const key of Object.keys(KB)) {
+            if (cmd.includes(key) || key.includes(cmd)) {
+              lines = KB[key];
+              break;
+            }
+          }
+        }
+
+        if (lines) {
+          printLines(lines, 80, null);
+        } else {
+          appendLine('command not found: ' + cmd + ' — try `help`', 'err');
+        }
+      }
+
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          const val = input.value;
+          input.value = '';
+          handleCommand(val);
+        }
+      });
+
+      /* Click anywhere on card to focus input */
+      const card = document.querySelector('.ai-term-card');
+      if (card) card.addEventListener('click', function () { input.focus(); });
+    })();
+
   </script>
 </body>
 </html>
