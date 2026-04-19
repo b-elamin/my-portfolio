@@ -449,9 +449,93 @@
     }
 
     @media (max-width: 768px) {
-      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { gap: 1rem; }
+      nav { padding: 1rem 1.25rem; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+
+      #hero {
+        padding: 5rem 1.25rem 3rem;
+        align-items: flex-start;
+        min-height: 100svh;
+      }
+      .hero-content {
+        padding-left: 0;
+        padding-right: 0;
+      }
+      .hero-photo-frame {
+        width: 100px; height: 100px;
+        margin: 0 0 1rem 0;
+      }
+      .hero-photo-img {
+        width: 100px; height: 100px;
+      }
+      .hero-photo-ring  { inset: -5px; }
+      .hero-photo-ring.ring2 { inset: -10px; }
+      .hero-title {
+        font-size: clamp(2.8rem, 16vw, 5rem);
+        letter-spacing: -2px;
+        line-height: 0.95;
+      }
+      .hero-title::after { margin-top: 0.8rem; }
+      .hero-sub  { font-size: 0.9rem; margin: 0 0 0.6rem; }
+      .hero-tagline { font-size: 0.85rem; margin: 0 0 1.2rem; }
+      .hero-stats { gap: 0.5rem; margin-bottom: 1.5rem; }
+      .hero-stats span { font-size: 0.78rem; }
+      .hero-cta { gap: 0.6rem; }
+      .btn { padding: 0.65rem 1.25rem; font-size: 0.85rem; }
+
+      #about {
+        padding: 4rem 1.25rem;
+        min-height: unset;
+        align-items: flex-start;
+      }
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .about-visual { display: none; }
+      #radar-wrap {
+        width: 100%;
+        max-width: 300px;
+        height: 300px;
+        margin: 1.5rem auto 0;
+      }
+      #radar-canvas { width: 300px; height: 300px; }
+
+      #journey { padding: 4rem 1.25rem; min-height: unset; }
+      .timeline { padding-left: 1.25rem; }
+
+      #projects { padding: 4rem 1.25rem; min-height: unset; align-items: flex-start; }
+      .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .card-scene { height: 280px; }
+
+      #github-stats { padding: 4rem 1.25rem; min-height: unset; align-items: flex-start; }
+      .stat-cards-grid { grid-template-columns: 1fr 1fr; }
+      .gh-stat-value { font-size: 1.6rem; }
+
+      #contact {
+        padding: 4rem 1.25rem;
+        min-height: unset;
+        text-align: left;
+        align-items: flex-start;
+      }
+      .contact-info { margin: 0 0 1.5rem; }
+      .contact-form { max-width: 100%; }
+
+      footer {
+        padding: 1.5rem 1.25rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 0.4rem;
+        font-size: 0.78rem;
+      }
+
+      #gravity-canvas { display: none; }
+      #matrix-canvas  { opacity: 0.12; }
+      #theme-switcher { bottom: 1rem; right: 1rem; }
     }
 
     .about-text p {
@@ -1164,11 +1248,6 @@
       cursor: pointer;
       line-height: 1;
     }
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .hamburger { display: flex; }
-    }
-
     /* ── Journey / Timeline Section ── */
     #journey {
       padding: 5rem 2rem;
