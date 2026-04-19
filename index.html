@@ -379,6 +379,28 @@
       background: rgba(255, 255, 255, 0.08);
     }
 
+    .btn-download {
+      border: 1px solid rgba(57, 211, 83, 0.5);
+      color: #39d353;
+      background: rgba(57, 211, 83, 0.06);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .btn-download:hover {
+      background: rgba(57, 211, 83, 0.14);
+      border-color: rgba(57, 211, 83, 0.8);
+      box-shadow: 0 0 18px rgba(57, 211, 83, 0.25);
+    }
+
+    .btn-download svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      flex-shrink: 0;
+    }
+
     /* Scroll hint */
     .scroll-hint {
       position: absolute;
@@ -1689,7 +1711,12 @@
         <a href="#projects" class="btn btn-primary">view projects</a>
         <a href="#contact" class="btn btn-outline">get in touch</a>
         <a href="https://github.com/belamiin" class="btn btn-outline" target="_blank" rel="noopener">github ↗</a>
-        <a href="bilal-elamin-cv.pdf" download class="btn btn-outline">download cv ↓</a>
+        <a href="bilal-elamin-cv.pdf" download class="btn btn-download" title="Download my CV as PDF">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3v13M8 12l4 4 4-4M5 20h14"/>
+          </svg>
+          download cv
+        </a>
       </div>
     </div>
 
