@@ -73,13 +73,24 @@
     }
 
     .nav-logo {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+    }
+
+    .nav-logo-text {
       font-size: 1.4rem;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-family: 'Courier New', Courier, monospace;
+      color: #39d353;
       letter-spacing: -0.5px;
+    }
+
+    .nav-fullname {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 400;
+      letter-spacing: 0.5px;
     }
 
     .nav-links {
@@ -858,7 +869,10 @@
 
   <!-- Nav -->
   <nav>
-    <span class="nav-logo">✦ Portfolio</span>
+    <span class="nav-logo">
+      <span class="nav-logo-text">b.elamin</span>
+      <span class="nav-fullname">Bilal EL AMIN</span>
+    </span>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#projects">Projects</a></li>
