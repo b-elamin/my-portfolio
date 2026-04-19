@@ -243,11 +243,51 @@
       -webkit-text-fill-color: transparent;
     }
 
+    .hero-avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      border: 2px solid #39d353;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #39d353;
+      background: rgba(57, 211, 83, 0.08);
+      margin: 0 auto 1.5rem;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
     .hero-sub {
       font-size: clamp(1rem, 2vw, 1.2rem);
       color: var(--muted);
       max-width: 540px;
-      margin: 0 auto 2.5rem;
+      margin: 0 auto 1rem;
+    }
+
+    .hero-tagline {
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-style: italic;
+      max-width: 480px;
+      margin: 0 auto 1.75rem;
+      opacity: 0.8;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-stats span {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0.3px;
     }
 
     .hero-cta {
@@ -920,18 +960,22 @@
     </div>
 
     <div class="hero-content">
+      <div class="hero-avatar">B.A</div>
       <div class="hero-tag">✦ Available for work</div>
-      <h1 class="hero-title">
-        Crafting digital<br/>
-        <span class="line-accent">experiences</span>
-      </h1>
-      <p class="hero-sub">
-        Full-stack developer &amp; creative technologist. I build beautiful,
-        performant interfaces and robust back-end systems.
-      </p>
+      <h1 class="hero-title">Bilal EL AMIN</h1>
+      <p class="hero-sub">Full Stack Developer Student · Fès, Morocco 🇲🇦</p>
+      <p class="hero-tagline">"I don't wait until I'm ready. I build my way into being ready."</p>
+      <div class="hero-stats">
+        <span>4+ languages</span>
+        <span>·</span>
+        <span>3 real projects</span>
+        <span>·</span>
+        <span>3 spoken languages</span>
+      </div>
       <div class="hero-cta">
-        <a href="#projects" class="btn btn-primary">See My Work</a>
-        <a href="#contact" class="btn btn-outline">Get In Touch</a>
+        <a href="#projects" class="btn btn-primary">view projects</a>
+        <a href="#contact" class="btn btn-outline">get in touch</a>
+        <a href="https://github.com/b-elamin" class="btn btn-outline" target="_blank" rel="noopener">github ↗</a>
       </div>
     </div>
 
