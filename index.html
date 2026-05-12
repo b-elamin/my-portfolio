@@ -1815,6 +1815,15 @@
     .nav-overlay a:hover { color: var(--accent) !important; }
     .nav-overlay-close { color: var(--muted) !important; }
 
+    /* ── Loader brand name ── */
+    #loader-name {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+      margin-bottom: 1.5rem;
+    }
     /* ── Radar ── */
     #radar-wrap::after {
       background: repeating-linear-gradient(
@@ -1836,7 +1845,7 @@
   <!-- Loading Screen -->
   <div id="loader">
     <div id="skull-wrap"></div>
-    <div id="loader-name" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:1.5rem;font-weight:700;color:#2563eb;letter-spacing:-0.5px;margin-bottom:1.5rem;">b.elamin</div>
+    <div id="loader-name">b.elamin</div>
     <div id="loader-bar-wrap">
       <div id="loader-bar-line"></div>
       <span id="loader-pct">0%</span>
@@ -3224,39 +3233,6 @@
 
       function triggerTransition (leaving) {
         return; // disabled for clean light theme
-        cooldown = true;
-
-        // 1. Spiral-inward on immediate children of the leaving section
-        const children = Array.from(leaving.children);
-        children.forEach((child, i) => {
-          const delay = i * 55;
-          child.style.transition = `transform 0.65s ease ${delay}ms, opacity 0.65s ease ${delay}ms`;
-          child.style.transform  = 'rotate(720deg) scale(0)';
-          child.style.opacity    = '0';
-        });
-
-        // 2. Expand black hole overlay
-        overlay.style.transition = 'clip-path 0.7s ease';
-        overlay.style.clipPath   = 'circle(150% at 50% 50%)';
-
-        // 3. Ring shockwave on canvas
-        if (typeof window.triggerShockwave === 'function') window.triggerShockwave();
-
-        // 4. Collapse overlay after expansion completes
-        setTimeout(() => {
-          overlay.style.transition = 'clip-path 0.5s ease';
-          overlay.style.clipPath   = 'circle(0% at 50% 50%)';
-        }, 720);
-
-        // 5. Reset spiral styles so elements recover when section is re-entered
-        setTimeout(() => {
-          children.forEach((child) => {
-            child.style.transition = '';
-            child.style.transform  = '';
-            child.style.opacity    = '';
-          });
-          cooldown = false;
-        }, 1400);
       }
 
       // Track previous intersecting state to detect true exits
